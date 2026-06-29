@@ -90,12 +90,8 @@ select {
   overflow: hidden;
   padding: 95px max(24px, calc((100vw - 1120px) / 2));
   color: white;
-  background-image:
-    linear-gradient(90deg, #11111a 0%, rgba(17, 17, 26, 0.86) 45%, rgba(17, 17, 26, 0.28) 100%),
-    var(--hero-image, radial-gradient(circle at 80% 28%, #ffb34a 0, #fd4f75 35%, #141526 72%));
-  background-position: center;
-  background-size: cover;
-  transition: background-image 500ms ease;
+  cursor: pointer;
+  background: #17121f;
 }
 
 .hero.slide-1 {
@@ -106,8 +102,28 @@ select {
   --slide-accent: #e84d8d;
 }
 
+.hero-thumbnail {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(90deg, rgba(11,11,18,.98) 0%, rgba(11,11,18,.88) 42%, rgba(11,11,18,.3) 78%, rgba(11,11,18,.2) 100%),
+    linear-gradient(0deg, rgba(11,11,18,.35), transparent 50%);
+}
+
 .hero::after {
   position: absolute;
+  z-index: 1;
   right: -8%;
   bottom: -55%;
   width: 600px;

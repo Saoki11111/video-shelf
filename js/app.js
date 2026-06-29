@@ -9,6 +9,7 @@ const emptyState = document.querySelector("#empty-state");
 const sortSelect = document.querySelector("#sort-select");
 const likesFilter = document.querySelector("#likes-filter");
 const heroCarousel = document.querySelector("#hero-carousel");
+const heroThumbnail = document.querySelector("#hero-thumbnail");
 const heroEyebrow = document.querySelector("#hero-eyebrow");
 const heroTitle = document.querySelector("#hero-title");
 const heroDescription = document.querySelector("#hero-description");
@@ -46,7 +47,7 @@ function renderCarousel() {
   heroDescription.textContent = video.description;
   heroWatch.href = `video.html?id=${encodeURIComponent(video.id)}`;
   heroNumber.textContent = String(activeSlide + 1).padStart(2, "0");
-  heroCarousel.style.setProperty("--hero-image", `url("${video.thumbnail}")`);
+  heroThumbnail.src = video.thumbnail;
 
   [...carouselDots.children].forEach((dot, index) => {
     dot.classList.toggle("active", index === activeSlide);
@@ -98,6 +99,9 @@ function initializeCarousel() {
   heroCarousel.addEventListener("mouseleave", startCarousel);
   heroCarousel.addEventListener("focusin", stopCarousel);
   heroCarousel.addEventListener("focusout", startCarousel);
+  heroCarousel.addEventListener("click", (event) => {
+    if (!event.target.closest("a, button")) location.href = heroWatch.href;
+  });
 
   renderCarousel();
   startCarousel();

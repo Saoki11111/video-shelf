@@ -2,92 +2,76 @@
 
 ## 1. 目的
 
-旅行動画を、家族や知人が迷わず見られる軽量な動画サイトにする。
-更新は年2〜3回を想定し、管理画面を持たない静的構成で運用する。
+自分と友人が同じ画面で旅行動画を見られる、軽量な静的サイトを作る。
+更新は年2〜3回とし、管理画面、DB、ログイン、APIは持たない。
 
-## 2. 基本方針
-
-- UI: ポップ×Netflix風のダークデザイン
-- フロントエンド: HTML / CSS / Vanilla JavaScript
-- 公開: Cloudflare Pages
-- 動画: Google Drive
-- データ: `videos.json`
-- 個人のいいね: ブラウザの `localStorage`
-- DB、ログイン、API、サーバー処理: 使用しない
-
-管理画面は作らない。動画追加時はGoogle Driveへアップロードし、`videos.json` だけ更新する。
-
-## 3. 全体構成
+## 2. システム構成
 
 ```mermaid
 flowchart LR
     Owner[管理者] -->|動画をアップロード| Drive[Google Drive<br>動画本体]
     Owner -->|JSON・サムネイルを更新| GitHub[GitHub]
     GitHub -->|自動デプロイ| Pages[Cloudflare Pages<br>閲覧サイト]
-    Viewer[自分・友人] -->|同じ画面を閲覧| Pages
+    Viewer[自分・友人] -->|同じURLを閲覧| Pages
     Pages -->|videos.jsonを読む| Catalog[videos.json<br>動画台帳]
     Pages -->|詳細画面で再生| Drive
     Viewer -->|詳細URLを共有| LINE[LINE]
-    Pages -->|いいねを端末内保存| LocalStorage[localStorage]
 ```
 
-Google DriveはDBではなく動画ストレージである。DBは使用せず、少量の動画情報は `videos.json` で管理する。
+| システム | 役割 |
+| --- | --- |
+| GitHub | HTML、CSS、JavaScript、JSON、サムネイルを管理 |
+| Cloudflare Pages | 閲覧サイトを公開 |
+| Google Drive | 動画本体を保存・再生 |
+| `videos.json` | 動画情報、新着日、おすすめ順を管理 |
+| LINE | Cloudflare Pages上の動画詳細URLを共有 |
 
-## 4. 保存先と公開範囲
+Google DriveはDBではなく動画ストレージである。DBは使用しない。
 
-```text
-Cloudflare Pages
-├── HTML / CSS / JavaScript
-├── videos.json
-└── サムネイル画像
+## 3. 技術構成
 
-Google Drive
-└── 動画本体
-```
+- HTML / CSS / Vanilla JavaScript
+- Cloudflare Pages
+- Google Drive
+- 静的な `videos.json`
+- JPEGサムネイル
 
-- Cloudflare Pagesへ動画本体は置かない。
-- Google Driveは「リンクを知っている全員が閲覧可」にする。
-- 完全な非公開サイトではない。URLを知る人は動画を閲覧できる。
-- ローカル開発時だけDownloads内の動画を参照する。
+フレームワーク、パッケージ、Webフォント、サーバー処理は使用しない。
 
-## 5. ディレクトリ構成
+## 4. 画面構成
 
-### 現在
+### TOP (`index.html`)
 
-```text
-/
-├── README.md
-├── index.html             # TOP・一覧
-├── video.html             # 動画詳細
-├── data/videos.json
-├── images/thumbnails/     # 軽量サムネイル
-├── css/style.css
-├── js/
-│   ├── app.js
-│   └── video.js
-└── docs/design.md
-```
+1. おすすめ上位3本のサムネイルカルーセル
+2. 新着3本
+3. おすすめ3本
+4. 全動画へのリンク
 
-### 今後追加
+### 全動画
 
-```text
-/
-├── index.html             # TOP
-├── ranking.html           # 視聴数・いいね数ランキング
-├── videos.html            # 全動画一覧
-├── video.html             # 動画詳細
-├── data/
-│   └── videos.json
-├── images/
-│   └── thumbnails/        # サムネイル
-├── css/
-│   └── style.css
-└── js/
-    ├── app.js
-    ├── ranking.js
-    ├── videos.js
-    └── video.js
-```
+- 全動画一覧
+- 新着順 / おすすめ順
+- 場所タグによる絞り込み
+
+初期版はTOP内に一覧を置く。動画が増えたら `videos.html` へ分離する。
+
+### 動画詳細 (`video.html?id=動画ID`)
+
+- Google Drive埋め込みプレーヤー
+- タイトル、公開日、説明、場所タグ
+- LINE共有
+
+## 5. 機能
+
+| 機能 | 判定方法 |
+| --- | --- |
+| 新着 | `publishedAt` の降順 |
+| おすすめ | `sortOrder` の昇順 |
+| カルーセル | おすすめ上位3本 |
+| タグ絞り込み | 場所タグ1件 |
+| LINE共有 | サイトの動画詳細URL |
+
+視聴数、人気ランキング、いいねは実装しない。必要になった時点でDBとAPIの導入を再検討する。
 
 ## 6. videos.json
 
@@ -101,109 +85,39 @@ Google Drive
     "tags": ["香港"],
     "thumbnail": "images/thumbnails/202603-hongkong.jpg",
     "driveFileId": "GOOGLE_DRIVE_FILE_ID",
-    "viewCount": 0,
-    "likeCount": 0
+    "sortOrder": 1
   }
 ]
 ```
 
-ルール:
-
 - `id` は一意とし、公開後は変更しない。
 - タグは場所を表す1件だけにする。
-- 新着順は `publishedAt` の降順とする。
-- `viewCount` と `likeCount` は初期版では手動更新する。
+- `sortOrder` は小さいほどおすすめ上位とする。
 - ローカル確認時のみ `driveFileId` の代わりに `src` を使用できる。
 
-## 7. 画面構成
-
-### TOP (`index.html`)
-
-1. 新着3本のサムネイルカルーセル
-2. 新着動画3本
-3. 視聴数TOP3
-4. いいね数TOP3
-5. 「全動画を見る」リンク
-
-カルーセルは5秒ごとに自動移動する。左右ボタン、ドット、スワイプでも操作できるようにし、マウスを乗せた時とキーボード操作中は自動移動を止める。
-
-### 視聴数ランキング (`ranking.html?by=views`)
-
-- `viewCount` の降順でTOP5を表示
-
-### いいねランキング (`ranking.html?by=likes`)
-
-- `likeCount` の降順でTOP5を表示
-
-### 全動画 (`videos.html`)
-
-- 全動画一覧
-- 新着順 / 視聴数順 / いいね数順
-- 場所タグによる絞り込み
-- いいねした動画だけ表示
-
-### 動画詳細 (`video.html?id=動画ID`)
-
-- Google Drive埋め込みプレーヤー
-- タイトル、公開日、説明、場所タグ
-- いいねボタン
-- LINE共有
-
-## 8. ナビゲーション
-
-- TOP
-- 視聴数TOP5
-- いいねTOP5
-- 全動画
-
-常に同じヘッダーを表示し、現在のページを強調する。管理画面への導線は置かない。
-
-## 9. いいね・視聴数
-
-### 個人のいいね
-
-- ログイン不要
-- 動画IDを `localStorage` に保存
-- 同じブラウザ、同じ端末、同じ公開URLでは保持される
-- ブラウザデータ削除、別端末、別ブラウザ、ドメイン変更では引き継がれない
-
-### 公開ランキング
-
-DBとAPIを使わないため、全ユーザーのいいね数と視聴数は自動集計できない。
-初期版は `videos.json` の `likeCount` と `viewCount` を管理者が手動更新してランキングを作る。
-
-自動集計が必要になった時だけ、Cloudflare WorkersとD1等を追加する。
-
-## 10. タグ
-
-- 1動画につき場所タグ1件
-- 初期タグ: 香港、石垣島、上海
-- タグ選択時は既存ボタンを再描画し、重複生成しない
-- 「すべて」で絞り込みを解除する
-
-## 11. Google Drive動画
-
-1. Google Driveへ動画をアップロードする。
-2. 共有設定を「リンクを知っている全員が閲覧可」にする。
-3. URLからファイルIDを取得する。
-4. `videos.json` の `driveFileId` に登録する。
-5. 詳細画面では次のURLを組み立てる。
+## 7. ディレクトリ構成
 
 ```text
-https://drive.google.com/file/d/{driveFileId}/preview
+/
+├── README.md
+├── index.html
+├── video.html
+├── data/
+│   └── videos.json
+├── images/
+│   └── thumbnails/
+├── css/
+│   └── style.css
+├── js/
+│   ├── app.js
+│   └── video.js
+└── docs/
+    └── design.md
 ```
 
-## 12. LINE共有
+ローカル動画を置く `media/` はGit管理しない。
 
-Google Drive URLではなく、サイトの動画詳細URLを共有する。
-
-```text
-https://social-plugins.line.me/lineit/share?url={詳細URL}
-```
-
-公開URLは変更しない。Cloudflare Pagesの本番ドメインまたは独自ドメインを継続利用する。
-
-## 13. 動画公開フロー
+## 8. 動画公開フロー
 
 ```mermaid
 sequenceDiagram
@@ -220,88 +134,61 @@ sequenceDiagram
     Owner->>JSON: 動画情報とDrive IDを追加
     Owner->>GitHub: push
     GitHub->>Pages: 自動デプロイ
-    Viewer->>Pages: 同じ公開URLを開く
-    Pages->>JSON: 動画一覧を取得
+    Viewer->>Pages: 公開URLを開く
+    Pages->>JSON: 一覧を取得
     Viewer->>Pages: 動画詳細を開く
     Pages->>Drive: 埋め込み動画を再生
 ```
 
-1. 動画をGoogle Driveへアップロードする。
-2. 共有設定を「リンクを知っている全員が閲覧可」にする。
-3. 動画からサムネイルを1枚作成する。
-4. `videos.json` にタイトル、DriveファイルID等を1件追加する。
-5. ローカルで一覧、詳細、再生を確認する。
-6. GitHubへpushし、Cloudflare Pagesへ反映する。
-7. 公開された動画詳細URLをLINEで共有する。
+Google Driveへアップロードしただけではサイトに追加されない。`videos.json` とサムネイルをGitHubへ反映する必要がある。
 
-Google Driveへアップロードしただけではサイトへ自動追加されない。HTMLは変更せず、`videos.json` とサムネイルだけを追加する。
+## 9. 軽量化
 
-## 14. 閲覧・LINE共有フロー
-
-```mermaid
-flowchart LR
-    Top[TOP<br>サムネイルのみ] --> Detail[動画詳細]
-    Detail --> Player[Google Drive再生]
-    Detail --> Share[LINE共有ボタン]
-    Share --> Friend[友人]
-    Friend -->|同じ詳細URL| Detail
-```
-
-共有するのはGoogle Drive URLではなく、Cloudflare Pages上の動画詳細URLとする。
-
-## 15. 軽量化
-
-- TOPと一覧では動画を読み込まず、JPEGサムネイルだけを表示する。
+- TOPと一覧では動画を読み込まず、サムネイルだけを表示する。
 - サムネイルは1280×720、1枚200KB以下を目安にする。
-- 一覧のサムネイルは遅延読み込みする。
+- 一覧画像は遅延読み込みする。
 - 動画本体は詳細画面だけで読み込む。
-- JavaScriptライブラリやWebフォントを追加しない。
-- 自動再生動画をTOPへ置かない。
+- TOPで動画を自動再生しない。
 
-## 16. 使用システムと役割
+## 10. 公開範囲
 
-| システム | 役割 |
-| --- | --- |
-| GitHub | HTML、CSS、JavaScript、JSON、サムネイルの管理 |
-| Cloudflare Pages | 閲覧サイトの公開、同じURLの維持 |
-| Google Drive | 動画本体の保存・再生 |
-| `videos.json` | 動画情報と表示順の台帳。DBの代わり |
-| `localStorage` | 各ユーザーのいいね状態の保存 |
-| LINE | Cloudflare Pages上の動画詳細URLを共有 |
+- Google Driveは「リンクを知っている全員が閲覧可」にする。
+- 完全な非公開サイトではない。
+- LINEではGoogle Drive URLではなく、サイトの動画詳細URLを共有する。
+- 公開後は同じCloudflare Pagesドメインを継続利用する。
 
-## 17. 現在の実装状況
+## 11. 現在の実装状況
 
 実装済み:
 
-- 新着3本カルーセル
+- おすすめ3本カルーセル
 - 動画サムネイル
-- 全動画一覧、新着順・おすすめ順
+- 全動画一覧
+- 新着順 / おすすめ順
 - 場所タグ絞り込み
-- いいねと端末内保存
-- 動画詳細、ローカル動画再生
+- 動画詳細
+- ローカル動画再生
 - LINE共有
 
 未実装:
 
-- 共通ナビゲーション
-- TOPの新着・視聴数・いいね各TOP3
-- 視聴数TOP5、いいねTOP5、全動画の個別ページ
+- TOPの新着3本・おすすめ3本セクション
 - Google Drive動画への切り替え
 - GitHub・Cloudflare Pagesへの公開
 
-## 18. 次のステップ
+## 12. 次のステップ
 
-1. 共通ナビゲーションとTOP各セクションを実装する。
-2. 視聴数TOP5、いいねTOP5、全動画ページを実装する。
-3. Google Driveへ3本をアップロードし、`driveFileId` に切り替える。
-4. GitHubリポジトリを作成してpushする。
-5. Cloudflare PagesとGitHubを接続して公開する。
-6. PC・スマートフォン・LINE共有から再生確認する。
+1. TOPに新着3本・おすすめ3本を実装する。
+2. スマートフォン表示と操作を確認する。
+3. Google Driveへ3本をアップロードする。
+4. `src` を `driveFileId` に切り替えて再生確認する。
+5. GitHubリポジトリを作成してpushする。
+6. Cloudflare Pagesへ公開する。
+7. LINEから詳細URLを開き、再生確認する。
 
-## 19. 将来拡張
+## 13. 将来拡張
 
-- 視聴数・いいね数の自動集計
+- 動画増加時の全動画ページ分離
 - 動画別OGP
-- 検索
-- Cloudflare R2への動画移行
-- 必要になった場合のみアクセス制限を追加
+- Cloudflare R2への移行
+- 必要になった場合のみ視聴数計測やアクセス制限を追加

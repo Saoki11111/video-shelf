@@ -66,8 +66,6 @@ select {
   padding-left: 2px;
 }
 
-.icon-button,
-.primary-button,
 .line-button {
   padding: 10px 16px;
   border: 1px solid var(--line);
@@ -76,12 +74,6 @@ select {
   color: var(--ink);
   background: #20202a;
   transition: 160ms ease;
-}
-
-.icon-button:hover,
-.icon-button[aria-pressed="true"] {
-  color: var(--accent);
-  border-color: var(--accent);
 }
 
 .hero {
@@ -410,25 +402,6 @@ select {
   place-items: center;
 }
 
-.favorite-card-button {
-  position: absolute;
-  z-index: 2;
-  top: 12px;
-  right: 12px;
-  width: 38px;
-  height: 38px;
-  color: white;
-  border: 0;
-  border-radius: 50%;
-  cursor: pointer;
-  background: rgba(15, 26, 22, 0.5);
-  font-size: 21px;
-}
-
-.favorite-card-button.active {
-  color: #ff765d;
-}
-
 .card-body {
   padding: 20px;
 }
@@ -514,12 +487,6 @@ select {
   flex-direction: column;
   gap: 10px;
   min-width: 170px;
-}
-
-.primary-button {
-  color: white;
-  border-color: var(--ink);
-  background: var(--ink);
 }
 
 .line-button {

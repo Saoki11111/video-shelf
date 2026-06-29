@@ -20,17 +20,20 @@
     </header>
 
     <main>
-      <section class="hero">
+      <section id="hero-carousel" class="hero slide-0" aria-label="新着動画" aria-roledescription="カルーセル">
+        <button id="carousel-prev" class="carousel-arrow carousel-prev" type="button" aria-label="前の動画">←</button>
         <div class="hero-content">
-          <p class="eyebrow">NEW TRIP · HONG KONG</p>
-          <h1>旅の続きを、<br>再生しよう。</h1>
-          <p>香港、石垣島、上海。旅先で残した景色を、いつでも気軽に。</p>
+          <p id="hero-eyebrow" class="eyebrow">NEW TRIP</p>
+          <h1 id="hero-title">旅の続きを、再生しよう。</h1>
+          <p id="hero-description">旅先で残した景色を、いつでも気軽に。</p>
           <div class="hero-actions">
-            <a class="watch-button" href="video.html?id=202603-hongkong">▶ 最新の動画を見る</a>
+            <a id="hero-watch" class="watch-button" href="video.html?id=202603-hongkong">▶ この動画を見る</a>
             <a class="sub-button" href="#library-title">すべて見る</a>
           </div>
         </div>
-        <p class="hero-number" aria-hidden="true">03</p>
+        <p id="hero-number" class="hero-number" aria-hidden="true">01</p>
+        <button id="carousel-next" class="carousel-arrow carousel-next" type="button" aria-label="次の動画">→</button>
+        <div id="carousel-dots" class="carousel-dots" aria-label="表示する動画を選ぶ"></div>
       </section>
 
       <section class="library" aria-labelledby="library-title">

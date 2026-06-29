@@ -8,10 +8,22 @@ const count = document.querySelector("#result-count");
 const emptyState = document.querySelector("#empty-state");
 const sortSelect = document.querySelector("#sort-select");
 const likesFilter = document.querySelector("#likes-filter");
+const heroCarousel = document.querySelector("#hero-carousel");
+const heroEyebrow = document.querySelector("#hero-eyebrow");
+const heroTitle = document.querySelector("#hero-title");
+const heroDescription = document.querySelector("#hero-description");
+const heroWatch = document.querySelector("#hero-watch");
+const heroNumber = document.querySelector("#hero-number");
+const carouselPrev = document.querySelector("#carousel-prev");
+const carouselNext = document.querySelector("#carousel-next");
+const carouselDots = document.querySelector("#carousel-dots");
 
 let videos = [];
 let selectedTag = "すべて";
 let showLikesOnly = false;
+let featuredVideos = [];
+let activeSlide = 0;
+let carouselTimer;
 
 const readLikes = () => JSON.parse(
   localStorage.getItem(LIKES_KEY) || localStorage.getItem(LEGACY_FAVORITES_KEY) || "[]"
@@ -21,6 +33,74 @@ const formatDate = (date) => new Intl.DateTimeFormat("ja-JP", {
   year: "numeric",
   month: "long"
 }).format(new Date(`${date}T00:00:00`));
+
+function renderCarousel() {
+  const video = featuredVideos[activeSlide];
+  if (!video) return;
+
+  heroCarousel.classList.remove("slide-0", "slide-1", "slide-2");
+  heroCarousel.classList.add(`slide-${activeSlide}`);
+  heroCarousel.setAttribute("aria-label", `新着動画 ${activeSlide + 1}/${featuredVideos.length}`);
+  heroEyebrow.textContent = `NEW TRIP · ${video.tags[0].toUpperCase()}`;
+  heroTitle.textContent = video.title;
+  heroDescription.textContent = video.description;
+  heroWatch.href = `video.html?id=${encodeURIComponent(video.id)}`;
+  heroNumber.textContent = String(activeSlide + 1).padStart(2, "0");
+
+  [...carouselDots.children].forEach((dot, index) => {
+    dot.classList.toggle("active", index === activeSlide);
+    dot.setAttribute("aria-current", index === activeSlide ? "true" : "false");
+  });
+}
+
+function selectSlide(index) {
+  activeSlide = (index + featuredVideos.length) % featuredVideos.length;
+  renderCarousel();
+}
+
+function stopCarousel() {
+  clearInterval(carouselTimer);
+}
+
+function startCarousel() {
+  stopCarousel();
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  carouselTimer = setInterval(() => selectSlide(activeSlide + 1), 5000);
+}
+
+function initializeCarousel() {
+  featuredVideos = [...videos]
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+    .slice(0, 3);
+
+  carouselDots.replaceChildren(...featuredVideos.map((video, index) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "carousel-dot";
+    dot.setAttribute("aria-label", `${video.title}を表示`);
+    dot.addEventListener("click", () => {
+      selectSlide(index);
+      startCarousel();
+    });
+    return dot;
+  }));
+
+  carouselPrev.addEventListener("click", () => {
+    selectSlide(activeSlide - 1);
+    startCarousel();
+  });
+  carouselNext.addEventListener("click", () => {
+    selectSlide(activeSlide + 1);
+    startCarousel();
+  });
+  heroCarousel.addEventListener("mouseenter", stopCarousel);
+  heroCarousel.addEventListener("mouseleave", startCarousel);
+  heroCarousel.addEventListener("focusin", stopCarousel);
+  heroCarousel.addEventListener("focusout", startCarousel);
+
+  renderCarousel();
+  startCarousel();
+}
 
 function toggleLike(id) {
   const likes = readLikes();
@@ -122,6 +202,7 @@ fetch(DATA_URL)
   })
   .then((data) => {
     videos = data;
+    initializeCarousel();
     renderTags();
     renderVideos();
   })

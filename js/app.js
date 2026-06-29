@@ -46,6 +46,7 @@ function renderCarousel() {
   heroDescription.textContent = video.description;
   heroWatch.href = `video.html?id=${encodeURIComponent(video.id)}`;
   heroNumber.textContent = String(activeSlide + 1).padStart(2, "0");
+  heroCarousel.style.setProperty("--hero-image", `url("${video.thumbnail}")`);
 
   [...carouselDots.children].forEach((dot, index) => {
     dot.classList.toggle("active", index === activeSlide);
@@ -120,7 +121,17 @@ function createCard(video) {
 
   const visual = document.createElement("div");
   visual.className = "card-visual";
-  visual.innerHTML = '<span class="play-mark" aria-hidden="true">▶</span>';
+  const thumbnail = document.createElement("img");
+  thumbnail.className = "card-thumbnail";
+  thumbnail.src = video.thumbnail;
+  thumbnail.alt = "";
+  thumbnail.loading = "lazy";
+  thumbnail.decoding = "async";
+  const playMark = document.createElement("span");
+  playMark.className = "play-mark";
+  playMark.setAttribute("aria-hidden", "true");
+  playMark.textContent = "▶";
+  visual.append(thumbnail, playMark);
 
   const favorite = document.createElement("button");
   const isLiked = readLikes().includes(video.id);

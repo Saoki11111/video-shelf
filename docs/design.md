@@ -65,7 +65,7 @@ Google Drive
     "description": "2026年3月の香港旅行。",
     "publishedAt": "2026-03-01",
     "tags": ["香港"],
-    "thumbnail": "images/thumbnails/202603-hongkong.webp",
+    "thumbnail": "images/thumbnails/202603-hongkong.jpg",
     "driveFileId": "GOOGLE_DRIVE_FILE_ID",
     "viewCount": 0,
     "likeCount": 0
@@ -172,14 +172,38 @@ https://social-plugins.line.me/lineit/share?url={詳細URL}
 ## 12. 動画追加手順
 
 1. 動画をGoogle Driveへアップロードする。
-2. サムネイルを1枚作成する。
-3. `videos.json` に1件追加する。
-4. ローカルで一覧、詳細、再生を確認する。
-5. GitHubへpushし、Cloudflare Pagesへ反映する。
+2. 共有設定を「リンクを知っている全員が閲覧可」にする。
+3. 動画からサムネイルを1枚作成する。
+4. `videos.json` にタイトル、DriveファイルID等を1件追加する。
+5. ローカルで一覧、詳細、再生を確認する。
+6. GitHubへpushし、Cloudflare Pagesへ反映する。
+7. 公開された動画詳細URLをLINEで共有する。
 
-HTMLは動画追加のたびに変更しない。
+Google Driveへアップロードしただけではサイトへ自動追加されない。HTMLは変更せず、`videos.json` とサムネイルだけを追加する。
 
-## 13. 実装順
+## 13. 軽量化
+
+- TOPと一覧では動画を読み込まず、JPEGサムネイルだけを表示する。
+- サムネイルは1280×720、1枚200KB以下を目安にする。
+- 一覧のサムネイルは遅延読み込みする。
+- 動画本体は詳細画面だけで読み込む。
+- JavaScriptライブラリやWebフォントを追加しない。
+- 自動再生動画をTOPへ置かない。
+
+## 14. 使用システムと役割
+
+| システム | 役割 |
+| --- | --- |
+| GitHub | HTML、CSS、JavaScript、JSON、サムネイルの管理 |
+| Cloudflare Pages | 閲覧サイトの公開、同じURLの維持 |
+| Google Drive | 動画本体の保存・再生 |
+| `videos.json` | 動画情報と表示順の台帳。DBの代わり |
+| `localStorage` | 各ユーザーのいいね状態の保存 |
+| LINE | Cloudflare Pages上の動画詳細URLを共有 |
+
+Google DriveはDBではなく動画ストレージである。DBは使用せず、少量の動画情報は `videos.json` で管理する。
+
+## 15. 実装順
 
 1. タグ重複バグを修正する。
 2. お気に入り表記を「いいね」へ変更する。
@@ -191,7 +215,7 @@ HTMLは動画追加のたびに変更しない。
 8. Google Drive動画へ切り替える。
 9. Cloudflare Pagesへ公開する。
 
-## 14. 将来拡張
+## 16. 将来拡張
 
 - 視聴数・いいね数の自動集計
 - 動画別OGP

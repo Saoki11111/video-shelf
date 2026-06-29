@@ -90,22 +90,20 @@ select {
   overflow: hidden;
   padding: 95px max(24px, calc((100vw - 1120px) / 2));
   color: white;
-  background:
-    linear-gradient(90deg, #11111a 0%, rgba(17, 17, 26, 0.88) 45%, rgba(17, 17, 26, 0.18) 100%),
-    radial-gradient(circle at 80% 28%, #ffb34a 0, #fd4f75 23%, #563bc1 48%, #141526 72%);
-  transition: background 500ms ease;
+  background-image:
+    linear-gradient(90deg, #11111a 0%, rgba(17, 17, 26, 0.86) 45%, rgba(17, 17, 26, 0.28) 100%),
+    var(--hero-image, radial-gradient(circle at 80% 28%, #ffb34a 0, #fd4f75 35%, #141526 72%));
+  background-position: center;
+  background-size: cover;
+  transition: background-image 500ms ease;
 }
 
 .hero.slide-1 {
-  background:
-    linear-gradient(90deg, #0b1217 0%, rgba(11, 18, 23, 0.86) 45%, rgba(11, 18, 23, 0.15) 100%),
-    radial-gradient(circle at 80% 28%, #c9ff7d 0, #1ac6c2 24%, #2452a4 50%, #101725 74%);
+  --slide-accent: #1ac6c2;
 }
 
 .hero.slide-2 {
-  background:
-    linear-gradient(90deg, #12101a 0%, rgba(18, 16, 26, 0.86) 45%, rgba(18, 16, 26, 0.15) 100%),
-    radial-gradient(circle at 80% 28%, #ffb35c 0, #e84d8d 24%, #6d3dcc 50%, #171226 74%);
+  --slide-accent: #e84d8d;
 }
 
 .hero::after {
@@ -364,8 +362,28 @@ select {
   background: repeating-linear-gradient(125deg, transparent 0 36px, rgba(255,255,255,.16) 37px 38px);
 }
 
+.card-thumbnail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease;
+}
+
+.video-card:hover .card-thumbnail {
+  transform: scale(1.04);
+}
+
+.card-visual::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,.32));
+}
+
 .play-mark {
-  z-index: 1;
+  z-index: 2;
   display: grid;
   width: 54px;
   height: 54px;

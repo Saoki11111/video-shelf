@@ -1,148 +1,200 @@
-# 個人用動画サイト 設計
+# Video Shelf 設計
 
 ## 1. 目的
 
-Google Drive上の個人動画を、一覧・絞り込み・再生・共有できる軽量な静的サイトを作る。
-運用費と保守負担を抑え、Cloudflare Pagesの無料枠での公開を基本とする。
+旅行動画を、家族や知人が迷わず見られる軽量な動画サイトにする。
+更新は年2〜3回を想定し、管理画面を持たない静的構成で運用する。
 
-## 2. 技術構成
+## 2. 基本方針
 
+- UI: ポップ×Netflix風のダークデザイン
 - フロントエンド: HTML / CSS / Vanilla JavaScript
-- データ: 静的な `videos.json`
-- 動画保存・再生: Google Drive
 - 公開: Cloudflare Pages
-- お気に入り保存: ブラウザの `localStorage`
-- DB、認証、API、サーバー処理: 使用しない
+- 動画: Google Drive
+- データ: `videos.json`
+- 個人のいいね: ブラウザの `localStorage`
+- DB、ログイン、API、サーバー処理: 使用しない
 
-Astroは動画数や画面数が増えた場合の移行候補とし、初期実装では導入しない。
+管理画面は作らない。動画追加時はGoogle Driveへアップロードし、`videos.json` だけ更新する。
 
-## 3. ディレクトリ構成案
+## 3. 保存先と公開範囲
+
+```text
+Cloudflare Pages
+├── HTML / CSS / JavaScript
+├── videos.json
+└── サムネイル画像
+
+Google Drive
+└── 動画本体
+```
+
+- Cloudflare Pagesへ動画本体は置かない。
+- Google Driveは「リンクを知っている全員が閲覧可」にする。
+- 完全な非公開サイトではない。URLを知る人は動画を閲覧できる。
+- ローカル開発時だけDownloads内の動画を参照する。
+
+## 4. ディレクトリ構成
 
 ```text
 /
-├── index.html           # 一覧画面
-├── video.html           # 動画詳細画面
+├── index.html             # TOP
+├── ranking.html           # 視聴数・いいね数ランキング
+├── videos.html            # 全動画一覧
+├── video.html             # 動画詳細
 ├── data/
 │   └── videos.json
+├── images/
+│   └── thumbnails/        # サムネイル
 ├── css/
 │   └── style.css
 └── js/
-    ├── app.js           # 一覧・絞り込み・お気に入り
-    └── video.js         # 詳細・再生・共有
+    ├── app.js
+    ├── ranking.js
+    ├── videos.js
+    └── video.js
 ```
 
-## 4. videos.json のデータ形式
+## 5. videos.json
 
 ```json
 [
   {
     "id": "202603-hongkong",
-    "title": "香港 2026年3月",
-    "description": "香港旅行の動画",
+    "title": "香港、光と熱気の街",
+    "description": "2026年3月の香港旅行。",
     "publishedAt": "2026-03-01",
-    "tags": ["旅行", "香港"],
+    "tags": ["香港"],
+    "thumbnail": "images/thumbnails/202603-hongkong.webp",
     "driveFileId": "GOOGLE_DRIVE_FILE_ID",
-    "sortOrder": 1
-  },
-  {
-    "id": "202601-ishigaki",
-    "title": "石垣島 2026年1月",
-    "description": "石垣島旅行の動画",
-    "publishedAt": "2026-01-01",
-    "tags": ["旅行", "沖縄"],
-    "driveFileId": "GOOGLE_DRIVE_FILE_ID",
-    "sortOrder": 2
-  },
-  {
-    "id": "202509-shanghai",
-    "title": "上海 2025年9月",
-    "description": "上海旅行の動画",
-    "publishedAt": "2025-09-01",
-    "tags": ["旅行", "上海"],
-    "driveFileId": "GOOGLE_DRIVE_FILE_ID",
-    "sortOrder": 3
+    "viewCount": 0,
+    "likeCount": 0
   }
 ]
 ```
 
 ルール:
 
-- `id` は一意で、公開後は変更しない。
+- `id` は一意とし、公開後は変更しない。
+- タグは場所を表す1件だけにする。
 - 新着順は `publishedAt` の降順とする。
-- 人気順は再生数を使わず、`sortOrder` の昇順とする。
-- `driveFileId` にはGoogle Drive共有URL全体ではなくファイルIDだけを保存する。
-- 初期データは動作確認用動画 `202603_hongkong.mp4`、`202601_ishigaki.mp4`、`202509_shanhai.mp4` を元に登録する。表示名は `shanhai` を「上海」とする。
+- `viewCount` と `likeCount` は初期版では手動更新する。
+- ローカル確認時のみ `driveFileId` の代わりに `src` を使用できる。
 
-## 5. 画面構成
+## 6. 画面構成
 
-### 一覧画面 (`index.html`)
+### TOP (`index.html`)
 
-- サイト名
-- 並び順切り替え: 新着順 / 人気順
-- タグ絞り込み
-- 動画カード一覧
-- お気に入りのみ表示
+1. 新着3本のサムネイルカルーセル
+2. 新着動画3本
+3. 視聴数TOP3
+4. いいね数TOP3
+5. 「全動画を見る」リンク
 
-### 詳細画面 (`video.html?id=動画ID`)
+カルーセルは5秒ごとに自動移動する。左右ボタン、ドット、スワイプでも操作できるようにし、マウスを乗せた時とキーボード操作中は自動移動を止める。
 
-- タイトル、説明、公開日、タグ
+### 視聴数ランキング (`ranking.html?by=views`)
+
+- `viewCount` の降順でTOP5を表示
+
+### いいねランキング (`ranking.html?by=likes`)
+
+- `likeCount` の降順でTOP5を表示
+
+### 全動画 (`videos.html`)
+
+- 全動画一覧
+- 新着順 / 視聴数順 / いいね数順
+- 場所タグによる絞り込み
+- いいねした動画だけ表示
+
+### 動画詳細 (`video.html?id=動画ID`)
+
 - Google Drive埋め込みプレーヤー
-- お気に入りボタン
-- LINE共有ボタン
-- 一覧へ戻るリンク
+- タイトル、公開日、説明、場所タグ
+- いいねボタン
+- LINE共有
 
-## 6. 機能一覧
+## 7. ナビゲーション
 
-| 機能 | 方針 |
-| --- | --- |
-| 新着 | `publishedAt` の降順で表示 |
-| タグ絞り込み | 選択タグを含む動画だけ表示 |
-| 人気順 | `sortOrder` の昇順で表示 |
-| お気に入り | 動画IDを `localStorage` に保存 |
-| 動画詳細 | URLの `id` と `videos.json` を照合 |
-| LINE共有 | 詳細画面の公開URLを共有 |
+- TOP
+- 視聴数TOP5
+- いいねTOP5
+- 全動画
 
-お気に入りは端末・ブラウザ単位であり、同期やバックアップは行わない。
+常に同じヘッダーを表示し、現在のページを強調する。管理画面への導線は置かない。
 
-## 7. Google Drive動画URLの扱い
+## 8. いいね・視聴数
 
-1. 動画をGoogle Driveへアップロードする。
+### 個人のいいね
+
+- ログイン不要
+- 動画IDを `localStorage` に保存
+- 同じブラウザ、同じ端末、同じ公開URLでは保持される
+- ブラウザデータ削除、別端末、別ブラウザ、ドメイン変更では引き継がれない
+
+### 公開ランキング
+
+DBとAPIを使わないため、全ユーザーのいいね数と視聴数は自動集計できない。
+初期版は `videos.json` の `likeCount` と `viewCount` を管理者が手動更新してランキングを作る。
+
+自動集計が必要になった時だけ、Cloudflare WorkersとD1等を追加する。
+
+## 9. タグ
+
+- 1動画につき場所タグ1件
+- 初期タグ: 香港、石垣島、上海
+- タグ選択時は既存ボタンを再描画し、重複生成しない
+- 「すべて」で絞り込みを解除する
+
+## 10. Google Drive動画
+
+1. Google Driveへ動画をアップロードする。
 2. 共有設定を「リンクを知っている全員が閲覧可」にする。
-3. 共有URLからファイルIDを取り出し、`driveFileId` に記載する。
-4. 詳細画面で次の埋め込みURLを組み立てる。
+3. URLからファイルIDを取得する。
+4. `videos.json` の `driveFileId` に登録する。
+5. 詳細画面では次のURLを組み立てる。
 
 ```text
 https://drive.google.com/file/d/{driveFileId}/preview
 ```
 
-動画ファイルや共有URLをリポジトリへ置かない。Google Drive側の共有停止、処理待ち、帯域制限により再生できない場合があるため、公開後にシークを含めて確認する。
+## 11. LINE共有
 
-## 8. LINE共有の方針
-
-LINEの共有URLを使用し、Google Drive URLではなくサイトの詳細URLを共有する。
+Google Drive URLではなく、サイトの動画詳細URLを共有する。
 
 ```text
-https://social-plugins.line.me/lineit/share?url={URLエンコードした詳細URL}
+https://social-plugins.line.me/lineit/share?url={詳細URL}
 ```
 
-共有先で内容を識別しやすくするため、将来必要になれば動画ごとの静的HTML生成とOGP設定を追加する。初期版では共通OGPで運用する。
+公開URLは変更しない。Cloudflare Pagesの本番ドメインまたは独自ドメインを継続利用する。
 
-## 9. 将来拡張案
+## 12. 動画追加手順
 
-- サムネイル画像、検索、複数タグ選択
-- Astroへの移行と動画ごとの静的ページ生成
-- OGPの動画別最適化
-- `videos.json` のスキーマ検証
-- データ更新が増えた場合のCMSまたはDB導入
-- 非公開運用が必要になった場合のCloudflare Access導入
-- Google Driveの制限が問題になった場合のCloudflare R2等への移行
+1. 動画をGoogle Driveへアップロードする。
+2. サムネイルを1枚作成する。
+3. `videos.json` に1件追加する。
+4. ローカルで一覧、詳細、再生を確認する。
+5. GitHubへpushし、Cloudflare Pagesへ反映する。
 
-## 10. 実装ステップ
+HTMLは動画追加のたびに変更しない。
 
-1. 3本の動画をGoogle Driveへアップロードし、共有設定と再生を確認する。
-2. `videos.json` にメタデータとファイルIDを登録する。
-3. 一覧画面と詳細画面をHTML/CSSで作成する。
-4. JSON読込、並び替え、タグ絞り込みを実装する。
-5. お気に入りとLINE共有を実装する。
-6. ローカルHTTPサーバーで3本の表示・再生・シークを確認する。
-7. Cloudflare Pagesへ公開し、PCとスマートフォンで確認する。
+## 13. 実装順
+
+1. タグ重複バグを修正する。
+2. お気に入り表記を「いいね」へ変更する。
+3. 共通ナビゲーションを追加する。
+4. 新着3本カルーセルを実装する。
+5. TOPの新着・視聴数・いいね各TOP3を実装する。
+6. 視聴数TOP5、いいねTOP5、全動画ページを実装する。
+7. サムネイルを用意する。
+8. Google Drive動画へ切り替える。
+9. Cloudflare Pagesへ公開する。
+
+## 14. 将来拡張
+
+- 視聴数・いいね数の自動集計
+- 動画別OGP
+- 検索
+- Cloudflare R2への動画移行
+- 必要になった場合のみアクセス制限を追加

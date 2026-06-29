@@ -1,5 +1,6 @@
 const DATA_URL = "data/videos.json";
-const FAVORITES_KEY = "video-shelf-favorites";
+const LIKES_KEY = "video-shelf-likes";
+const LEGACY_FAVORITES_KEY = "video-shelf-favorites";
 
 const detail = document.querySelector("#detail");
 const errorState = document.querySelector("#error-state");
@@ -8,16 +9,18 @@ const title = document.querySelector("#detail-title");
 const date = document.querySelector("#detail-date");
 const description = document.querySelector("#detail-description");
 const tags = document.querySelector("#detail-tags");
-const favoriteButton = document.querySelector("#favorite-button");
+const likeButton = document.querySelector("#like-button");
 const lineShare = document.querySelector("#line-share");
 
 const id = new URLSearchParams(location.search).get("id");
-const readFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
-const saveFavorites = (items) => localStorage.setItem(FAVORITES_KEY, JSON.stringify(items));
+const readLikes = () => JSON.parse(
+  localStorage.getItem(LIKES_KEY) || localStorage.getItem(LEGACY_FAVORITES_KEY) || "[]"
+);
+const saveLikes = (items) => localStorage.setItem(LIKES_KEY, JSON.stringify(items));
 
-function updateFavoriteButton(videoId) {
-  const isFavorite = readFavorites().includes(videoId);
-  favoriteButton.textContent = isFavorite ? "♥ お気に入り済み" : "♡ お気に入り";
+function updateLikeButton(videoId) {
+  const isLiked = readLikes().includes(videoId);
+  likeButton.textContent = isLiked ? "♥ いいね済み" : "♡ いいね";
 }
 
 function renderVideo(video) {
@@ -50,13 +53,13 @@ function renderVideo(video) {
     player.append(videoElement);
   }
 
-  updateFavoriteButton(video.id);
-  favoriteButton.addEventListener("click", () => {
-    const favorites = readFavorites();
-    saveFavorites(favorites.includes(video.id)
-      ? favorites.filter((item) => item !== video.id)
-      : [...favorites, video.id]);
-    updateFavoriteButton(video.id);
+  updateLikeButton(video.id);
+  likeButton.addEventListener("click", () => {
+    const likes = readLikes();
+    saveLikes(likes.includes(video.id)
+      ? likes.filter((item) => item !== video.id)
+      : [...likes, video.id]);
+    updateLikeButton(video.id);
   });
 
   lineShare.href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(location.href)}`;

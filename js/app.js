@@ -1,29 +1,32 @@
 const DATA_URL = "data/videos.json";
-const FAVORITES_KEY = "video-shelf-favorites";
+const LIKES_KEY = "video-shelf-likes";
+const LEGACY_FAVORITES_KEY = "video-shelf-favorites";
 
 const grid = document.querySelector("#video-grid");
 const tagFilters = document.querySelector("#tag-filters");
 const count = document.querySelector("#result-count");
 const emptyState = document.querySelector("#empty-state");
 const sortSelect = document.querySelector("#sort-select");
-const favoritesFilter = document.querySelector("#favorites-filter");
+const likesFilter = document.querySelector("#likes-filter");
 
 let videos = [];
 let selectedTag = "すべて";
-let showFavoritesOnly = false;
+let showLikesOnly = false;
 
-const readFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
-const saveFavorites = (items) => localStorage.setItem(FAVORITES_KEY, JSON.stringify(items));
+const readLikes = () => JSON.parse(
+  localStorage.getItem(LIKES_KEY) || localStorage.getItem(LEGACY_FAVORITES_KEY) || "[]"
+);
+const saveLikes = (items) => localStorage.setItem(LIKES_KEY, JSON.stringify(items));
 const formatDate = (date) => new Intl.DateTimeFormat("ja-JP", {
   year: "numeric",
   month: "long"
 }).format(new Date(`${date}T00:00:00`));
 
-function toggleFavorite(id) {
-  const favorites = readFavorites();
-  saveFavorites(favorites.includes(id)
-    ? favorites.filter((item) => item !== id)
-    : [...favorites, id]);
+function toggleLike(id) {
+  const likes = readLikes();
+  saveLikes(likes.includes(id)
+    ? likes.filter((item) => item !== id)
+    : [...likes, id]);
   renderVideos();
 }
 
@@ -40,15 +43,15 @@ function createCard(video) {
   visual.innerHTML = '<span class="play-mark" aria-hidden="true">▶</span>';
 
   const favorite = document.createElement("button");
-  const isFavorite = readFavorites().includes(video.id);
-  favorite.className = `favorite-card-button${isFavorite ? " active" : ""}`;
+  const isLiked = readLikes().includes(video.id);
+  favorite.className = `favorite-card-button${isLiked ? " active" : ""}`;
   favorite.type = "button";
-  favorite.textContent = isFavorite ? "♥" : "♡";
-  favorite.setAttribute("aria-label", isFavorite ? "お気に入りから削除" : "お気に入りに追加");
+  favorite.textContent = isLiked ? "♥" : "♡";
+  favorite.setAttribute("aria-label", isLiked ? "いいねを取り消す" : "いいねする");
   favorite.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
-    toggleFavorite(video.id);
+    toggleLike(video.id);
   });
   visual.append(favorite);
 
@@ -75,10 +78,10 @@ function createCard(video) {
 }
 
 function renderVideos() {
-  const favorites = readFavorites();
+  const likes = readLikes();
   const filtered = videos
     .filter((video) => selectedTag === "すべて" || video.tags.includes(selectedTag))
-    .filter((video) => !showFavoritesOnly || favorites.includes(video.id))
+    .filter((video) => !showLikesOnly || likes.includes(video.id))
     .sort((a, b) => sortSelect.value === "popular"
       ? a.sortOrder - b.sortOrder
       : b.publishedAt.localeCompare(a.publishedAt));
@@ -89,6 +92,7 @@ function renderVideos() {
 }
 
 function renderTags() {
+  tagFilters.replaceChildren();
   const tags = ["すべて", ...new Set(videos.flatMap((video) => video.tags))];
   tags.forEach((tag) => {
     const button = document.createElement("button");
@@ -105,9 +109,9 @@ function renderTags() {
 }
 
 sortSelect.addEventListener("change", renderVideos);
-favoritesFilter.addEventListener("click", () => {
-  showFavoritesOnly = !showFavoritesOnly;
-  favoritesFilter.setAttribute("aria-pressed", String(showFavoritesOnly));
+likesFilter.addEventListener("click", () => {
+  showLikesOnly = !showLikesOnly;
+  likesFilter.setAttribute("aria-pressed", String(showLikesOnly));
   renderVideos();
 });
 

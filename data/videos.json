@@ -4,7 +4,7 @@
     "title": "香港、光と熱気の街",
     "description": "ネオン、街角の音、フェリーから眺める港。2026年3月の香港旅行。",
     "publishedAt": "2026-03-01",
-    "tags": ["香港", "街歩き"],
+    "tags": ["香港"],
     "src": "media/202603_hongkong.mp4",
     "sortOrder": 1
   },
@@ -13,7 +13,7 @@
     "title": "石垣島、島時間",
     "description": "青い海とゆっくり流れる時間を記録した、2026年1月の石垣島旅行。",
     "publishedAt": "2026-01-01",
-    "tags": ["石垣島", "自然"],
+    "tags": ["石垣島"],
     "src": "media/202601_ishigaki.mp4",
     "sortOrder": 2
   },
@@ -22,7 +22,7 @@
     "title": "上海、過去と未来のあいだ",
     "description": "歴史ある街並みと高層ビルが交差する、2025年9月の上海旅行。",
     "publishedAt": "2025-09-01",
-    "tags": ["上海", "街歩き"],
+    "tags": ["上海"],
     "src": "media/202509_shanhai.mp4",
     "sortOrder": 3
   }

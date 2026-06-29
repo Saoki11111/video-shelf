@@ -21,16 +21,23 @@
 
     <main>
       <section class="hero">
-        <p class="eyebrow">PRIVATE TRAVEL ARCHIVE</p>
-        <h1>旅の記憶を、<br>いつでもここで。</h1>
-        <p>大切な景色と時間をまとめた、小さなビデオライブラリ。</p>
+        <div class="hero-content">
+          <p class="eyebrow">NEW TRIP · HONG KONG</p>
+          <h1>旅の続きを、<br>再生しよう。</h1>
+          <p>香港、石垣島、上海。旅先で残した景色を、いつでも気軽に。</p>
+          <div class="hero-actions">
+            <a class="watch-button" href="video.html?id=202603-hongkong">▶ 最新の動画を見る</a>
+            <a class="sub-button" href="#library-title">すべて見る</a>
+          </div>
+        </div>
+        <p class="hero-number" aria-hidden="true">03</p>
       </section>
 
       <section class="library" aria-labelledby="library-title">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">COLLECTION</p>
-            <h2 id="library-title">動画一覧</h2>
+            <p class="eyebrow">YOUR COLLECTION</p>
+            <h2 id="library-title">旅を選ぶ</h2>
           </div>
           <label class="sort-control">
             <span>並び順</span>
@@ -41,7 +48,10 @@
           </label>
         </div>
 
-        <div id="tag-filters" class="tag-filters" aria-label="タグで絞り込む"></div>
+        <div class="filter-row">
+          <span class="filter-label">場所</span>
+          <div id="tag-filters" class="tag-filters" aria-label="場所で絞り込む"></div>
+        </div>
         <p id="result-count" class="result-count" aria-live="polite"></p>
         <div id="video-grid" class="video-grid"></div>
         <p id="empty-state" class="empty-state" hidden>該当する動画はありません。</p>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="旅の動画をまとめた個人用ビデオライブラリ">
+    <title>旅の記憶 | Video Shelf</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="トップへ">
+        <span class="brand-mark">▶</span>
+        <span>Video Shelf</span>
+      </a>
+      <button id="favorites-filter" class="icon-button" type="button" aria-pressed="false">
+        <span aria-hidden="true">♡</span> お気に入り
+      </button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">PRIVATE TRAVEL ARCHIVE</p>
+        <h1>旅の記憶を、<br>いつでもここで。</h1>
+        <p>大切な景色と時間をまとめた、小さなビデオライブラリ。</p>
+      </section>
+
+      <section class="library" aria-labelledby="library-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">COLLECTION</p>
+            <h2 id="library-title">動画一覧</h2>
+          </div>
+          <label class="sort-control">
+            <span>並び順</span>
+            <select id="sort-select">
+              <option value="newest">新着順</option>
+              <option value="popular">おすすめ順</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="tag-filters" class="tag-filters" aria-label="タグで絞り込む"></div>
+        <p id="result-count" class="result-count" aria-live="polite"></p>
+        <div id="video-grid" class="video-grid"></div>
+        <p id="empty-state" class="empty-state" hidden>該当する動画はありません。</p>
+      </section>
+    </main>
+
+    <footer>Video Shelf · Personal Archive</footer>
+  </body>
+</html>

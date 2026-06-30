@@ -1,10 +1,5 @@
-const DATA_URL = "data/videos.json";
+import { createCard, fetchVideos } from "./shared.js";
 
-const grid = document.querySelector("#video-grid");
-const tagFilters = document.querySelector("#tag-filters");
-const count = document.querySelector("#result-count");
-const emptyState = document.querySelector("#empty-state");
-const sortSelect = document.querySelector("#sort-select");
 const newVideosGrid = document.querySelector("#new-videos");
 const recommendedVideosGrid = document.querySelector("#recommended-videos");
 const heroCarousel = document.querySelector("#hero-carousel");
@@ -19,15 +14,9 @@ const carouselNext = document.querySelector("#carousel-next");
 const carouselDots = document.querySelector("#carousel-dots");
 
 let videos = [];
-let selectedTag = "すべて";
 let featuredVideos = [];
 let activeSlide = 0;
 let carouselTimer;
-
-const formatDate = (date) => new Intl.DateTimeFormat("ja-JP", {
-  year: "numeric",
-  month: "long"
-}).format(new Date(`${date}T00:00:00`));
 
 function renderCarousel() {
   const video = featuredVideos[activeSlide];
@@ -101,53 +90,9 @@ function initializeCarousel() {
   startCarousel();
 }
 
-function createCard(video) {
-  const card = document.createElement("article");
-  card.className = "video-card";
-
-  const link = document.createElement("a");
-  link.href = `video.html?id=${encodeURIComponent(video.id)}`;
-  link.setAttribute("aria-label", `${video.title}を見る`);
-
-  const visual = document.createElement("div");
-  visual.className = "card-visual";
-  const thumbnail = document.createElement("img");
-  thumbnail.className = "card-thumbnail";
-  thumbnail.src = video.thumbnail;
-  thumbnail.alt = "";
-  thumbnail.loading = "lazy";
-  thumbnail.decoding = "async";
-  const playMark = document.createElement("span");
-  playMark.className = "play-mark";
-  playMark.setAttribute("aria-hidden", "true");
-  playMark.textContent = "▶";
-  visual.append(thumbnail, playMark);
-
-  const body = document.createElement("div");
-  body.className = "card-body";
-  const tags = document.createElement("div");
-  tags.className = "card-tags";
-  video.tags.forEach((tag) => {
-    const tagElement = document.createElement("span");
-    tagElement.textContent = `#${tag}`;
-    tags.append(tagElement);
-  });
-  const title = document.createElement("h3");
-  title.className = "card-title";
-  title.textContent = video.title;
-  const date = document.createElement("p");
-  date.className = "card-date";
-  date.textContent = formatDate(video.publishedAt);
-
-  body.append(tags, title, date);
-  link.append(visual, body);
-  card.append(link);
-  return card;
-}
-
 function renderTopSections() {
   const newest = [...videos]
-    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+    .sort((a, b) => (b.addedAt ?? b.publishedAt).localeCompare(a.addedAt ?? a.publishedAt))
     .slice(0, 3);
   const recommended = [...videos]
     .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -157,50 +102,12 @@ function renderTopSections() {
   recommendedVideosGrid.replaceChildren(...recommended.map(createCard));
 }
 
-function renderVideos() {
-  const filtered = videos
-    .filter((video) => selectedTag === "すべて" || video.tags.includes(selectedTag))
-    .sort((a, b) => sortSelect.value === "recommended"
-      ? a.sortOrder - b.sortOrder
-      : b.publishedAt.localeCompare(a.publishedAt));
-
-  grid.replaceChildren(...filtered.map(createCard));
-  count.textContent = `${filtered.length}本の動画`;
-  emptyState.hidden = filtered.length !== 0;
-}
-
-function renderTags() {
-  tagFilters.replaceChildren();
-  const tags = ["すべて", ...new Set(videos.flatMap((video) => video.tags))];
-  tags.forEach((tag) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `tag-button${tag === selectedTag ? " active" : ""}`;
-    button.textContent = tag;
-    button.addEventListener("click", () => {
-      selectedTag = tag;
-      renderTags();
-      renderVideos();
-    });
-    tagFilters.append(button);
-  });
-}
-
-sortSelect.addEventListener("change", renderVideos);
-
-fetch(DATA_URL)
-  .then((response) => {
-    if (!response.ok) throw new Error("動画データを取得できませんでした");
-    return response.json();
-  })
+fetchVideos()
   .then((data) => {
     videos = data;
     initializeCarousel();
     renderTopSections();
-    renderTags();
-    renderVideos();
   })
   .catch(() => {
-    emptyState.textContent = "動画データを読み込めませんでした。";
-    emptyState.hidden = false;
+    heroDescription.textContent = "動画データを読み込めませんでした。";
   });

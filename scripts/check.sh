@@ -6,6 +6,9 @@ cd "$ROOT_DIR"
 
 bash -n scripts/*.sh
 node --check js/app.js
+node --check js/all.js
+node --check js/shared.js
+node --check js/timeline.js
 node --check js/video.js
 python3 -m json.tool data/videos.json >/dev/null
 

@@ -1,5 +1,16 @@
 [
   {
+    "id": "202605-indonesia",
+    "title": "インドネシア、2026年5月の記録",
+    "description": "2026年5月に撮影したインドネシアの旅の動画。",
+    "publishedAt": "2026-05-01",
+    "addedAt": "2026-07-01",
+    "tags": ["インドネシア"],
+    "thumbnail": "images/thumbnails/202605-indonesia.webp",
+    "driveFileId": "1SoUqWmr_tpAKvOZLVbeWCMMZGQoM5Rwc",
+    "sortOrder": 1
+  },
+  {
     "id": "202603-hongkong",
     "title": "香港、光と熱気の街",
     "description": "ネオン、街角の音、フェリーから眺める港。2026年3月の香港旅行。",
@@ -7,7 +18,7 @@
     "tags": ["香港"],
     "thumbnail": "images/thumbnails/202603-hongkong.jpg",
     "driveFileId": "197C3d9uYS7RJkUu8ixKGXVUiUbv_pIaA",
-    "sortOrder": 1
+    "sortOrder": 2
   },
   {
     "id": "202601-ishigaki",
@@ -17,7 +28,18 @@
     "tags": ["石垣島"],
     "thumbnail": "images/thumbnails/202601-ishigaki.jpg",
     "driveFileId": "1oZDhW26dYx6df7VccstaTCATk55V9dx_",
-    "sortOrder": 2
+    "sortOrder": 3
+  },
+  {
+    "id": "202502-thai",
+    "title": "タイ、2025年2月の記録",
+    "description": "2025年2月に撮影したタイの旅の動画。",
+    "publishedAt": "2025-02-01",
+    "addedAt": "2026-07-01",
+    "tags": ["タイ"],
+    "thumbnail": "images/thumbnails/202502-thai.webp",
+    "driveFileId": "1DXIqE6MZqkAr_sQqI1UOBJ5oy51kHSZE",
+    "sortOrder": 4
   },
   {
     "id": "202509-shanghai",
@@ -27,6 +49,6 @@
     "tags": ["上海"],
     "thumbnail": "images/thumbnails/202509-shanghai.jpg",
     "driveFileId": "1dehntG7YRjLoi7LqtGLfNoUYQ6BhTqKO",
-    "sortOrder": 3
+    "sortOrder": 5
   }
 ]

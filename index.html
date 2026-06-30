@@ -4,16 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="旅の動画をまとめた個人用ビデオライブラリ">
-    <title>旅の記憶 | Video Shelf</title>
+    <title>旅の記憶 | Video Log</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/app.js" defer></script>
+    <script src="js/app.js" type="module"></script>
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="index.html" aria-label="トップへ">
         <span class="brand-mark">▶</span>
-        <span>Video Shelf</span>
+        <span>Video Log</span>
       </a>
+      <nav class="site-nav" aria-label="ページ">
+        <a href="index.html" aria-current="page">トップ</a>
+        <a href="timeline.html">一覧</a>
+      </nav>
     </header>
 
     <main>
@@ -26,7 +30,7 @@
           <p id="hero-description">旅先で残した景色を、いつでも気軽に。</p>
           <div class="hero-actions">
             <a id="hero-watch" class="watch-button" href="video.html?id=202603-hongkong">▶ この動画を見る</a>
-            <a class="sub-button" href="#library-title">すべて見る</a>
+            <a class="sub-button" href="timeline.html">一覧を見る</a>
           </div>
         </div>
         <p id="hero-number" class="hero-number" aria-hidden="true">01</p>
@@ -41,7 +45,7 @@
               <p class="eyebrow">JUST ADDED</p>
               <h2 id="new-videos-title">新着動画</h2>
             </div>
-            <a class="section-link" href="#library-title">すべて見る →</a>
+            <a class="section-link" href="timeline.html">一覧 →</a>
           </div>
           <div id="new-videos" class="video-grid shelf-grid"></div>
         </section>
@@ -52,37 +56,13 @@
               <p class="eyebrow">RECOMMENDED</p>
               <h2 id="recommended-videos-title">おすすめ</h2>
             </div>
-            <a class="section-link" href="#library-title">すべて見る →</a>
+            <a class="section-link" href="timeline.html">一覧 →</a>
           </div>
           <div id="recommended-videos" class="video-grid shelf-grid"></div>
         </section>
       </div>
-
-      <section class="library" aria-labelledby="library-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">ALL VIDEOS</p>
-            <h2 id="library-title">すべての動画</h2>
-          </div>
-          <label class="sort-control">
-            <span>並び順</span>
-            <select id="sort-select">
-              <option value="newest">新着順</option>
-              <option value="recommended">おすすめ順</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="filter-row">
-          <span class="filter-label">場所</span>
-          <div id="tag-filters" class="tag-filters" aria-label="場所で絞り込む"></div>
-        </div>
-        <p id="result-count" class="result-count" aria-live="polite"></p>
-        <div id="video-grid" class="video-grid"></div>
-        <p id="empty-state" class="empty-state" hidden>該当する動画はありません。</p>
-      </section>
     </main>
 
-    <footer>Video Shelf · Personal Archive</footer>
+    <footer>Video Log · Personal Archive</footer>
   </body>
 </html>

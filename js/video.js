@@ -1,4 +1,4 @@
-const DATA_URL = "data/videos.json";
+import { fetchVideos, getDriveDownloadUrl } from "./shared.js";
 
 const detail = document.querySelector("#detail");
 const errorState = document.querySelector("#error-state");
@@ -7,16 +7,24 @@ const title = document.querySelector("#detail-title");
 const date = document.querySelector("#detail-date");
 const description = document.querySelector("#detail-description");
 const tags = document.querySelector("#detail-tags");
+const downloadButton = document.querySelector("#detail-download");
 const id = new URLSearchParams(location.search).get("id");
 
 function renderVideo(video) {
-  document.title = `${video.title} | Video Shelf`;
+  document.title = `${video.title} | Video Log`;
   title.textContent = video.title;
   date.textContent = new Intl.DateTimeFormat("ja-JP", {
     year: "numeric",
     month: "long"
   }).format(new Date(`${video.publishedAt}T00:00:00`));
   description.textContent = video.description;
+
+  if (video.driveFileId) {
+    downloadButton.href = getDriveDownloadUrl(video.driveFileId);
+    downloadButton.hidden = false;
+  } else {
+    downloadButton.hidden = true;
+  }
 
   video.tags.forEach((tag) => {
     const item = document.createElement("span");
@@ -26,7 +34,7 @@ function renderVideo(video) {
 
   if (video.driveFileId) {
     const iframe = document.createElement("iframe");
-    iframe.src = `https://drive.google.com/file/d/${encodeURIComponent(video.driveFileId)}/preview`;
+    iframe.src = `https://drive.google.com/file/d/${encodeURIComponent(video.driveFileId)}/preview?autoplay=1&mute=1`;
     iframe.allow = "autoplay";
     iframe.allowFullscreen = true;
     iframe.title = `${video.title}の動画`;
@@ -42,11 +50,7 @@ function renderVideo(video) {
   detail.hidden = false;
 }
 
-fetch(DATA_URL)
-  .then((response) => {
-    if (!response.ok) throw new Error("動画データを取得できませんでした");
-    return response.json();
-  })
+fetchVideos()
   .then((videos) => {
     const video = videos.find((item) => item.id === id);
     if (!video) throw new Error("動画が見つかりません");

@@ -66,16 +66,6 @@ select {
   padding-left: 2px;
 }
 
-.line-button {
-  padding: 10px 16px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  cursor: pointer;
-  color: var(--ink);
-  background: #20202a;
-  transition: 160ms ease;
-}
-
 .hero {
   position: relative;
   height: 560px;
@@ -512,20 +502,6 @@ select {
 .detail-description {
   max-width: 700px;
   color: var(--muted);
-}
-
-.detail-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 170px;
-}
-
-.line-button {
-  color: white;
-  border-color: #06c755;
-  background: #06c755;
-  text-align: center;
 }
 
 footer {

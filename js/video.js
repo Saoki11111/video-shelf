@@ -7,8 +7,6 @@ const title = document.querySelector("#detail-title");
 const date = document.querySelector("#detail-date");
 const description = document.querySelector("#detail-description");
 const tags = document.querySelector("#detail-tags");
-const lineShare = document.querySelector("#line-share");
-
 const id = new URLSearchParams(location.search).get("id");
 
 function renderVideo(video) {
@@ -41,7 +39,6 @@ function renderVideo(video) {
     player.append(videoElement);
   }
 
-  lineShare.href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(location.href)}`;
   detail.hidden = false;
 }
 

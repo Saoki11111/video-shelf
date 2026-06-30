@@ -6,7 +6,7 @@
     "publishedAt": "2026-03-01",
     "tags": ["香港"],
     "thumbnail": "images/thumbnails/202603-hongkong.jpg",
-    "src": "media/202603_hongkong.mp4",
+    "driveFileId": "197C3d9uYS7RJkUu8ixKGXVUiUbv_pIaA",
     "sortOrder": 1
   },
   {
@@ -16,7 +16,7 @@
     "publishedAt": "2026-01-01",
     "tags": ["石垣島"],
     "thumbnail": "images/thumbnails/202601-ishigaki.jpg",
-    "src": "media/202601_ishigaki.mp4",
+    "driveFileId": "1oZDhW26dYx6df7VccstaTCATk55V9dx_",
     "sortOrder": 2
   },
   {
@@ -26,7 +26,7 @@
     "publishedAt": "2025-09-01",
     "tags": ["上海"],
     "thumbnail": "images/thumbnails/202509-shanghai.jpg",
-    "src": "media/202509_shanhai.mp4",
+    "driveFileId": "1dehntG7YRjLoi7LqtGLfNoUYQ6BhTqKO",
     "sortOrder": 3
   }
 ]

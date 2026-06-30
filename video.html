@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="動画詳細">
+    <title>動画 | Video Shelf</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/video.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">▶</span>
+        <span>Video Shelf</span>
+      </a>
+    </header>
+
+    <main class="detail-page">
+      <a class="back-link" href="index.html">← 動画一覧へ</a>
+      <div id="detail" hidden>
+        <div id="player" class="player"></div>
+        <div class="detail-layout">
+          <article>
+            <div id="detail-tags" class="card-tags"></div>
+            <h1 id="detail-title"></h1>
+            <p id="detail-date" class="detail-date"></p>
+            <p id="detail-description" class="detail-description"></p>
+          </article>
+          <aside class="detail-actions">
+            <a id="line-share" class="line-button" target="_blank" rel="noopener noreferrer">
+              LINEで共有
+            </a>
+          </aside>
+        </div>
+      </div>
+      <p id="error-state" class="empty-state" hidden>動画が見つかりません。</p>
+    </main>
+
+    <footer>Video Shelf · Personal Archive</footer>
+  </body>
+</html>

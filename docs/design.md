@@ -1,148 +1,193 @@
-# 個人用動画サイト 設計
+# Video Shelf 設計
 
 ## 1. 目的
 
-Google Drive上の個人動画を、一覧・絞り込み・再生・共有できる軽量な静的サイトを作る。
-運用費と保守負担を抑え、Cloudflare Pagesの無料枠での公開を基本とする。
+自分と友人が同じ画面で旅行動画を見られる、軽量な静的サイトを作る。
+更新は年2〜3回とし、管理画面、DB、ログイン、APIは持たない。
 
-## 2. 技術構成
+## 2. システム構成
 
-- フロントエンド: HTML / CSS / Vanilla JavaScript
-- データ: 静的な `videos.json`
-- 動画保存・再生: Google Drive
-- 公開: Cloudflare Pages
-- お気に入り保存: ブラウザの `localStorage`
-- DB、認証、API、サーバー処理: 使用しない
-
-Astroは動画数や画面数が増えた場合の移行候補とし、初期実装では導入しない。
-
-## 3. ディレクトリ構成案
-
-```text
-/
-├── index.html           # 一覧画面
-├── video.html           # 動画詳細画面
-├── data/
-│   └── videos.json
-├── css/
-│   └── style.css
-└── js/
-    ├── app.js           # 一覧・絞り込み・お気に入り
-    └── video.js         # 詳細・再生・共有
+```mermaid
+flowchart LR
+    Owner[管理者] -->|動画をアップロード| Drive[Google Drive<br>動画本体]
+    Owner -->|JSON・サムネイルを更新| GitHub[GitHub]
+    GitHub -->|自動デプロイ| Pages[Cloudflare Pages<br>閲覧サイト]
+    Viewer[自分・友人] -->|同じURLを閲覧| Pages
+    Pages -->|videos.jsonを読む| Catalog[videos.json<br>動画台帳]
+    Pages -->|詳細画面で再生| Drive
+    Viewer -->|詳細URLを共有| LINE[LINE]
 ```
 
-## 4. videos.json のデータ形式
+| システム | 役割 |
+| --- | --- |
+| GitHub | HTML、CSS、JavaScript、JSON、サムネイルを管理 |
+| Cloudflare Pages | 閲覧サイトを公開 |
+| Google Drive | 動画本体を保存・再生 |
+| `videos.json` | 動画情報、新着日、おすすめ順を管理 |
+| LINE | Cloudflare Pages上の動画詳細URLを共有 |
+
+Google DriveはDBではなく動画ストレージである。DBは使用しない。
+
+## 3. 技術構成
+
+- HTML / CSS / Vanilla JavaScript
+- Cloudflare Pages
+- Google Drive
+- 静的な `videos.json`
+- JPEGサムネイル
+
+フレームワーク、パッケージ、Webフォント、サーバー処理は使用しない。
+
+## 4. 画面構成
+
+### TOP (`index.html`)
+
+1. おすすめ上位3本のサムネイルカルーセル
+2. 新着3本
+3. おすすめ3本
+4. 全動画へのリンク
+
+### 全動画
+
+- 全動画一覧
+- 新着順 / おすすめ順
+- 場所タグによる絞り込み
+
+初期版はTOP内に一覧を置く。動画が増えたら `videos.html` へ分離する。
+
+### 動画詳細 (`video.html?id=動画ID`)
+
+- Google Drive埋め込みプレーヤー
+- タイトル、公開日、説明、場所タグ
+- LINE共有
+
+## 5. 機能
+
+| 機能 | 判定方法 |
+| --- | --- |
+| 新着 | `publishedAt` の降順 |
+| おすすめ | `sortOrder` の昇順 |
+| カルーセル | おすすめ上位3本 |
+| タグ絞り込み | 場所タグ1件 |
+| LINE共有 | サイトの動画詳細URL |
+
+視聴数、人気ランキング、いいねは実装しない。必要になった時点でDBとAPIの導入を再検討する。
+
+## 6. videos.json
 
 ```json
 [
   {
     "id": "202603-hongkong",
-    "title": "香港 2026年3月",
-    "description": "香港旅行の動画",
+    "title": "香港、光と熱気の街",
+    "description": "2026年3月の香港旅行。",
     "publishedAt": "2026-03-01",
-    "tags": ["旅行", "香港"],
+    "tags": ["香港"],
+    "thumbnail": "images/thumbnails/202603-hongkong.jpg",
     "driveFileId": "GOOGLE_DRIVE_FILE_ID",
     "sortOrder": 1
-  },
-  {
-    "id": "202601-ishigaki",
-    "title": "石垣島 2026年1月",
-    "description": "石垣島旅行の動画",
-    "publishedAt": "2026-01-01",
-    "tags": ["旅行", "沖縄"],
-    "driveFileId": "GOOGLE_DRIVE_FILE_ID",
-    "sortOrder": 2
-  },
-  {
-    "id": "202509-shanghai",
-    "title": "上海 2025年9月",
-    "description": "上海旅行の動画",
-    "publishedAt": "2025-09-01",
-    "tags": ["旅行", "上海"],
-    "driveFileId": "GOOGLE_DRIVE_FILE_ID",
-    "sortOrder": 3
   }
 ]
 ```
 
-ルール:
+- `id` は一意とし、公開後は変更しない。
+- タグは場所を表す1件だけにする。
+- `sortOrder` は小さいほどおすすめ上位とする。
+- ローカル確認時のみ `driveFileId` の代わりに `src` を使用できる。
 
-- `id` は一意で、公開後は変更しない。
-- 新着順は `publishedAt` の降順とする。
-- 人気順は再生数を使わず、`sortOrder` の昇順とする。
-- `driveFileId` にはGoogle Drive共有URL全体ではなくファイルIDだけを保存する。
-- 初期データは動作確認用動画 `202603_hongkong.mp4`、`202601_ishigaki.mp4`、`202509_shanhai.mp4` を元に登録する。表示名は `shanhai` を「上海」とする。
-
-## 5. 画面構成
-
-### 一覧画面 (`index.html`)
-
-- サイト名
-- 並び順切り替え: 新着順 / 人気順
-- タグ絞り込み
-- 動画カード一覧
-- お気に入りのみ表示
-
-### 詳細画面 (`video.html?id=動画ID`)
-
-- タイトル、説明、公開日、タグ
-- Google Drive埋め込みプレーヤー
-- お気に入りボタン
-- LINE共有ボタン
-- 一覧へ戻るリンク
-
-## 6. 機能一覧
-
-| 機能 | 方針 |
-| --- | --- |
-| 新着 | `publishedAt` の降順で表示 |
-| タグ絞り込み | 選択タグを含む動画だけ表示 |
-| 人気順 | `sortOrder` の昇順で表示 |
-| お気に入り | 動画IDを `localStorage` に保存 |
-| 動画詳細 | URLの `id` と `videos.json` を照合 |
-| LINE共有 | 詳細画面の公開URLを共有 |
-
-お気に入りは端末・ブラウザ単位であり、同期やバックアップは行わない。
-
-## 7. Google Drive動画URLの扱い
-
-1. 動画をGoogle Driveへアップロードする。
-2. 共有設定を「リンクを知っている全員が閲覧可」にする。
-3. 共有URLからファイルIDを取り出し、`driveFileId` に記載する。
-4. 詳細画面で次の埋め込みURLを組み立てる。
+## 7. ディレクトリ構成
 
 ```text
-https://drive.google.com/file/d/{driveFileId}/preview
+/
+├── README.md
+├── index.html
+├── video.html
+├── data/
+│   └── videos.json
+├── images/
+│   └── thumbnails/
+├── css/
+│   └── style.css
+├── js/
+│   ├── app.js
+│   └── video.js
+└── docs/
+    └── design.md
 ```
 
-動画ファイルや共有URLをリポジトリへ置かない。Google Drive側の共有停止、処理待ち、帯域制限により再生できない場合があるため、公開後にシークを含めて確認する。
+ローカル動画を置く `media/` はGit管理しない。
 
-## 8. LINE共有の方針
+## 8. 動画公開フロー
 
-LINEの共有URLを使用し、Google Drive URLではなくサイトの詳細URLを共有する。
+```mermaid
+sequenceDiagram
+    actor Owner as 管理者
+    participant Drive as Google Drive
+    participant JSON as videos.json
+    participant GitHub as GitHub
+    participant Pages as Cloudflare Pages
+    actor Viewer as 自分・友人
 
-```text
-https://social-plugins.line.me/lineit/share?url={URLエンコードした詳細URL}
+    Owner->>Drive: 動画をアップロード
+    Owner->>Drive: リンク閲覧を許可
+    Owner->>Owner: サムネイルを作成
+    Owner->>JSON: 動画情報とDrive IDを追加
+    Owner->>GitHub: push
+    GitHub->>Pages: 自動デプロイ
+    Viewer->>Pages: 公開URLを開く
+    Pages->>JSON: 一覧を取得
+    Viewer->>Pages: 動画詳細を開く
+    Pages->>Drive: 埋め込み動画を再生
 ```
 
-共有先で内容を識別しやすくするため、将来必要になれば動画ごとの静的HTML生成とOGP設定を追加する。初期版では共通OGPで運用する。
+Google Driveへアップロードしただけではサイトに追加されない。`videos.json` とサムネイルをGitHubへ反映する必要がある。
 
-## 9. 将来拡張案
+## 9. 軽量化
 
-- サムネイル画像、検索、複数タグ選択
-- Astroへの移行と動画ごとの静的ページ生成
-- OGPの動画別最適化
-- `videos.json` のスキーマ検証
-- データ更新が増えた場合のCMSまたはDB導入
-- 非公開運用が必要になった場合のCloudflare Access導入
-- Google Driveの制限が問題になった場合のCloudflare R2等への移行
+- TOPと一覧では動画を読み込まず、サムネイルだけを表示する。
+- サムネイルは1280×720、1枚200KB以下を目安にする。
+- 一覧画像は遅延読み込みする。
+- 動画本体は詳細画面だけで読み込む。
+- TOPで動画を自動再生しない。
 
-## 10. 実装ステップ
+## 10. 公開範囲
 
-1. 3本の動画をGoogle Driveへアップロードし、共有設定と再生を確認する。
-2. `videos.json` にメタデータとファイルIDを登録する。
-3. 一覧画面と詳細画面をHTML/CSSで作成する。
-4. JSON読込、並び替え、タグ絞り込みを実装する。
-5. お気に入りとLINE共有を実装する。
-6. ローカルHTTPサーバーで3本の表示・再生・シークを確認する。
-7. Cloudflare Pagesへ公開し、PCとスマートフォンで確認する。
+- Google Driveは「リンクを知っている全員が閲覧可」にする。
+- 完全な非公開サイトではない。
+- LINEではGoogle Drive URLではなく、サイトの動画詳細URLを共有する。
+- 公開後は同じCloudflare Pagesドメインを継続利用する。
+
+## 11. 現在の実装状況
+
+実装済み:
+
+- おすすめ3本カルーセル
+- TOPの新着3本・おすすめ3本
+- 動画サムネイル
+- 全動画一覧
+- 新着順 / おすすめ順
+- 場所タグ絞り込み
+- 動画詳細
+- ローカル動画再生
+- LINE共有
+
+未実装:
+
+- Google Drive動画への切り替え
+- GitHub・Cloudflare Pagesへの公開
+
+## 12. 次のステップ
+
+1. スマートフォン表示と操作を確認する。
+2. Google Driveへ3本をアップロードする。
+3. `src` を `driveFileId` に切り替えて再生確認する。
+4. GitHubリポジトリを作成してpushする。
+5. Cloudflare Pagesへ公開する。
+6. LINEから詳細URLを開き、再生確認する。
+
+## 13. 将来拡張
+
+- 動画増加時の全動画ページ分離
+- 動画別OGP
+- Cloudflare R2への移行
+- 必要になった場合のみ視聴数計測やアクセス制限を追加

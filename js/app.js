@@ -5,6 +5,8 @@ const tagFilters = document.querySelector("#tag-filters");
 const count = document.querySelector("#result-count");
 const emptyState = document.querySelector("#empty-state");
 const sortSelect = document.querySelector("#sort-select");
+const newVideosGrid = document.querySelector("#new-videos");
+const recommendedVideosGrid = document.querySelector("#recommended-videos");
 const heroCarousel = document.querySelector("#hero-carousel");
 const heroThumbnail = document.querySelector("#hero-thumbnail");
 const heroEyebrow = document.querySelector("#hero-eyebrow");
@@ -143,6 +145,18 @@ function createCard(video) {
   return card;
 }
 
+function renderTopSections() {
+  const newest = [...videos]
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+    .slice(0, 3);
+  const recommended = [...videos]
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .slice(0, 3);
+
+  newVideosGrid.replaceChildren(...newest.map(createCard));
+  recommendedVideosGrid.replaceChildren(...recommended.map(createCard));
+}
+
 function renderVideos() {
   const filtered = videos
     .filter((video) => selectedTag === "すべて" || video.tags.includes(selectedTag))
@@ -182,6 +196,7 @@ fetch(DATA_URL)
   .then((data) => {
     videos = data;
     initializeCarousel();
+    renderTopSections();
     renderTags();
     renderVideos();
   })

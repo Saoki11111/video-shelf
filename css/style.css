@@ -78,7 +78,7 @@ select {
 
 .hero {
   position: relative;
-  min-height: 430px;
+  height: 560px;
   overflow: hidden;
   padding: 95px max(24px, calc((100vw - 1120px) / 2));
   color: white;
@@ -133,17 +133,24 @@ select {
 
 .hero h1 {
   max-width: 650px;
-  min-height: 1.2em;
+  height: 2.4em;
+  overflow: hidden;
   margin: 10px 0 18px;
   font-family: Georgia, "Yu Mincho", serif;
   font-size: clamp(42px, 7vw, 76px);
   font-weight: 500;
   line-height: 1.2;
   letter-spacing: -0.03em;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .hero-content > p:not(.eyebrow) {
   max-width: 520px;
+  min-height: 3.4em;
+  margin-bottom: 0;
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -532,7 +539,7 @@ footer {
 
 @media (max-width: 780px) {
   .hero {
-    min-height: 380px;
+    height: 500px;
     padding: 72px 54px;
   }
 

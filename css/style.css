@@ -604,6 +604,13 @@ select {
   text-align: center;
 }
 
+.save-hint {
+  margin: 12px 4px 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
 .detail-layout {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -807,6 +814,10 @@ footer {
 
   .detail-layout {
     gap: 0;
+  }
+
+  .save-hint {
+    margin: 12px 20px 0;
   }
 
   .player {

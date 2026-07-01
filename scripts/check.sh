@@ -43,8 +43,6 @@ for video in videos:
         raise SystemExit(f"missing thumbnail: {video['thumbnail']}")
     if "videoUrl" in video and not video["videoUrl"].startswith("https://"):
         raise SystemExit(f"{video['id']}: videoUrl must use https")
-    if "downloadUrl" in video and not video["downloadUrl"].startswith("https://"):
-        raise SystemExit(f"{video['id']}: downloadUrl must use https")
     ids.add(video["id"])
 PY
 

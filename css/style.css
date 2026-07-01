@@ -589,8 +589,15 @@ select {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 22px;
   color: var(--muted);
+}
+
+.detail-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
 }
 
 .player {
@@ -620,10 +627,11 @@ select {
 }
 
 .save-hint {
-  margin: 12px 4px 0;
+  margin: 0;
   color: var(--muted);
   font-size: 12px;
   line-height: 1.6;
+  white-space: nowrap;
 }
 
 .detail-layout {
@@ -822,17 +830,16 @@ footer {
     padding: 0 0 40px;
   }
 
-  .back-link {
+  .detail-toolbar {
     margin: 18px 20px 12px;
+  }
+
+  .back-link {
     font-size: 14px;
   }
 
   .detail-layout {
     gap: 0;
-  }
-
-  .save-hint {
-    margin: 12px 20px 0;
   }
 
   .player {

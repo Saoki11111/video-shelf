@@ -98,6 +98,21 @@ select {
   background: rgba(255,255,255,.08);
 }
 
+.page-button-navigation {
+  color: #f7f7fa;
+  border-color: rgba(255, 255, 255, .2);
+  background: #262731;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.page-button-navigation:hover {
+  color: white;
+  border-color: rgba(255, 255, 255, .34);
+  background: #30323e;
+  transform: translateY(-1px);
+}
+
 .brand {
   display: flex;
   gap: 10px;

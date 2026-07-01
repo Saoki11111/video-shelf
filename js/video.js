@@ -32,19 +32,19 @@ function renderVideo(video) {
     tags.append(item);
   });
 
-  if (video.driveFileId) {
-    const iframe = document.createElement("iframe");
-    iframe.src = `https://drive.google.com/file/d/${encodeURIComponent(video.driveFileId)}/preview?autoplay=1&mute=1`;
-    iframe.allow = "autoplay";
-    iframe.allowFullscreen = true;
-    iframe.title = `${video.title}の動画`;
-    player.append(iframe);
-  } else {
+  if (video.videoUrl) {
     const videoElement = document.createElement("video");
-    videoElement.src = video.src;
+    videoElement.src = video.videoUrl;
     videoElement.controls = true;
+    videoElement.playsInline = true;
     videoElement.preload = "metadata";
+    videoElement.poster = video.thumbnail;
     player.append(videoElement);
+  } else {
+    const unavailable = document.createElement("p");
+    unavailable.className = "player-unavailable";
+    unavailable.textContent = "この動画は再生準備中です。";
+    player.append(unavailable);
   }
 
   detail.hidden = false;

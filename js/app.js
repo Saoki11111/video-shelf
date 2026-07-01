@@ -6,7 +6,6 @@ const heroThumbnail = document.querySelector("#hero-thumbnail");
 const heroEyebrow = document.querySelector("#hero-eyebrow");
 const heroTitle = document.querySelector("#hero-title");
 const heroDescription = document.querySelector("#hero-description");
-const heroWatch = document.querySelector("#hero-watch");
 const heroNumber = document.querySelector("#hero-number");
 const carouselPrev = document.querySelector("#carousel-prev");
 const carouselNext = document.querySelector("#carousel-next");
@@ -27,7 +26,6 @@ function renderCarousel() {
   heroEyebrow.textContent = `RECOMMENDED · ${video.tags[0].toUpperCase()}`;
   heroTitle.textContent = video.title;
   heroDescription.textContent = video.description;
-  heroWatch.href = `video.html?id=${encodeURIComponent(video.id)}`;
   heroNumber.textContent = String(activeSlide + 1).padStart(2, "0");
   heroThumbnail.src = video.thumbnail;
 
@@ -40,6 +38,11 @@ function renderCarousel() {
 function selectSlide(index) {
   activeSlide = (index + featuredVideos.length) % featuredVideos.length;
   renderCarousel();
+}
+
+function openActiveVideo() {
+  const video = featuredVideos[activeSlide];
+  if (video) location.href = `video.html?id=${encodeURIComponent(video.id)}`;
 }
 
 function stopCarousel() {
@@ -82,7 +85,12 @@ function initializeCarousel() {
   heroCarousel.addEventListener("focusin", stopCarousel);
   heroCarousel.addEventListener("focusout", startCarousel);
   heroCarousel.addEventListener("click", (event) => {
-    if (!event.target.closest("a, button")) location.href = heroWatch.href;
+    if (!event.target.closest("button")) openActiveVideo();
+  });
+  heroCarousel.addEventListener("keydown", (event) => {
+    if (event.target !== heroCarousel || (event.key !== "Enter" && event.key !== " ")) return;
+    event.preventDefault();
+    openActiveVideo();
   });
 
   renderCarousel();

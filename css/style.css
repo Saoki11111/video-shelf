@@ -259,6 +259,19 @@ select {
   margin-top: 30px;
 }
 
+.hero-list-link {
+  display: flex;
+  justify-content: center;
+  width: min(1120px, calc(100% - 48px));
+  margin: 18px auto 0;
+}
+
+.hero-list-link .page-button {
+  width: min(100%, 420px);
+  min-height: 52px;
+  box-shadow: var(--shadow);
+}
+
 .detail-actions {
   display: flex;
   flex-wrap: wrap;
@@ -714,6 +727,15 @@ footer {
   .top-sections {
     width: 100%;
     padding-left: 20px;
+  }
+
+  .hero-list-link {
+    width: calc(100% - 40px);
+    margin-top: 14px;
+  }
+
+  .hero-list-link .page-button {
+    width: 100%;
   }
 
   .site-header {

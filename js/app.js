@@ -22,8 +22,8 @@ function renderCarousel() {
 
   heroCarousel.classList.remove("slide-0", "slide-1", "slide-2");
   heroCarousel.classList.add(`slide-${activeSlide}`);
-  heroCarousel.setAttribute("aria-label", `おすすめ動画 ${activeSlide + 1}/${featuredVideos.length}`);
-  heroEyebrow.textContent = `RECOMMENDED · ${video.tags[0].toUpperCase()}`;
+  heroCarousel.setAttribute("aria-label", `ピックアップ動画 ${activeSlide + 1}/${featuredVideos.length}`);
+  heroEyebrow.textContent = `PICKUP · ${video.tags[0].toUpperCase()}`;
   heroTitle.textContent = video.title;
   heroDescription.textContent = video.description;
   heroNumber.textContent = String(activeSlide + 1).padStart(2, "0");
@@ -56,9 +56,12 @@ function startCarousel() {
 }
 
 function initializeCarousel() {
-  featuredVideos = [...videos]
-    .sort((a, b) => a.sortOrder - b.sortOrder)
-    .slice(0, 3);
+  const shuffledVideos = [...videos];
+  for (let index = shuffledVideos.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffledVideos[index], shuffledVideos[randomIndex]] = [shuffledVideos[randomIndex], shuffledVideos[index]];
+  }
+  featuredVideos = shuffledVideos.slice(0, 3);
 
   carouselDots.replaceChildren(...featuredVideos.map((video, index) => {
     const dot = document.createElement("button");

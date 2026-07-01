@@ -12,10 +12,10 @@
 `sync-main.sh` updates local `main`, prunes deleted remote branches, and deletes
 the previous local branch only when GitHub reports its PR as merged.
 
-## GitHub plan limitation
+## Repository visibility and protection
 
-GitHub Free does not provide rulesets or branch protection for this private
-repository. CI-gated merging is therefore implemented in
-`.github/workflows/auto-merge.yml`. If the repository is made public or the
-account is upgraded, add branch protection for `main` and require the
-`Validate static site` check.
+Auto merge is restricted to branches in this repository. Pull requests from
+forks are never merged automatically.
+
+For the public repository, protect `main` and require the
+`Validate static site` check before merging.

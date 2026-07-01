@@ -41,6 +41,8 @@ for video in videos:
         raise SystemExit(f"duplicate video id: {video['id']}")
     if not (root / video["thumbnail"]).is_file():
         raise SystemExit(f"missing thumbnail: {video['thumbnail']}")
+    if "videoUrl" in video and not video["videoUrl"].startswith("https://"):
+        raise SystemExit(f"{video['id']}: videoUrl must use https")
     ids.add(video["id"])
 PY
 

@@ -7,6 +7,7 @@
     "addedAt": "2026-07-01",
     "tags": ["インドネシア"],
     "thumbnail": "images/thumbnails/202605-indonesia.webp",
+    "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202605-indonesia.mp4",
     "driveFileId": "1SoUqWmr_tpAKvOZLVbeWCMMZGQoM5Rwc",
     "sortOrder": 1
   },
@@ -17,6 +18,7 @@
     "publishedAt": "2026-03-01",
     "tags": ["香港"],
     "thumbnail": "images/thumbnails/202603-hongkong.jpg",
+    "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202603-hongkong.mp4",
     "driveFileId": "197C3d9uYS7RJkUu8ixKGXVUiUbv_pIaA",
     "sortOrder": 2
   },
@@ -27,6 +29,7 @@
     "publishedAt": "2026-01-01",
     "tags": ["石垣島"],
     "thumbnail": "images/thumbnails/202601-ishigaki.jpg",
+    "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202601-ishigaki.mp4",
     "driveFileId": "1oZDhW26dYx6df7VccstaTCATk55V9dx_",
     "sortOrder": 3
   },
@@ -38,6 +41,7 @@
     "addedAt": "2026-07-01",
     "tags": ["タイ"],
     "thumbnail": "images/thumbnails/202502-thai.webp",
+    "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202502-thai.mp4",
     "driveFileId": "1DXIqE6MZqkAr_sQqI1UOBJ5oy51kHSZE",
     "sortOrder": 4
   },
@@ -48,6 +52,7 @@
     "publishedAt": "2025-09-01",
     "tags": ["上海"],
     "thumbnail": "images/thumbnails/202509-shanghai.jpg",
+    "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202509-shanghai.mp4",
     "driveFileId": "1dehntG7YRjLoi7LqtGLfNoUYQ6BhTqKO",
     "sortOrder": 5
   }

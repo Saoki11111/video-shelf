@@ -7,7 +7,6 @@ const title = document.querySelector("#detail-title");
 const date = document.querySelector("#detail-date");
 const description = document.querySelector("#detail-description");
 const tags = document.querySelector("#detail-tags");
-const downloadButton = document.querySelector("#detail-download");
 const nextVideos = document.querySelector("#next-videos");
 const nextVideosGrid = document.querySelector("#next-videos-grid");
 const id = new URLSearchParams(location.search).get("id");
@@ -37,13 +36,6 @@ function renderVideo(video, videos) {
     month: "long"
   }).format(new Date(`${video.publishedAt}T00:00:00`));
   description.textContent = video.description;
-
-  if (video.downloadUrl) {
-    downloadButton.href = video.downloadUrl;
-    downloadButton.hidden = false;
-  } else {
-    downloadButton.hidden = true;
-  }
 
   video.tags.forEach((tag) => {
     const item = document.createElement("span");

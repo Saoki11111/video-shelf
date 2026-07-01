@@ -1,6 +1,17 @@
-# Video Shelf
+# Video Log
 
-家族や友人と旅行動画を共有する、軽量な静的動画サイト。
+海外を中心に、旅先の景色と音を残す軽量な動画ログ。
+
+**公開サイト:** [https://video-shelf.pages.dev/](https://video-shelf.pages.dev/)
+
+## 構成
+
+- Cloudflare Pages: HTML、CSS、JavaScriptを公開
+- Cloudflare R2: 再生用MP4を配信
+- `data/videos.json`: タイトル、説明、日付、タグ、動画URLを管理
+- Google Drive: 元動画のバックアップ（サイトの再生には不使用）
+
+DB、ログイン、管理画面、フレームワークは使用しない。
 
 ## ローカル起動
 
@@ -8,16 +19,15 @@
 python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-http://127.0.0.1:4173/ を開く。
-
-ローカル動画は `media/` に置く。`media/` はGitへ追加されない。
+[http://127.0.0.1:4173/](http://127.0.0.1:4173/) を開く。
 
 ## 動画追加
 
-1. Google Driveへ動画をアップロードする。
-2. 共有設定を「リンクを知っている全員が閲覧可」にする。
-3. 動画からサムネイルを作る。
-4. `data/videos.json` に動画情報を追加する。
-5. ローカル確認後、GitHubへ反映する。
+1. MP4をCloudflare R2の `videos/` 以下へアップロードする。
+2. `Content-Type: video/mp4` とRange配信を確認する。
+3. サムネイルを `images/thumbnails/` へ追加する。
+4. `data/videos.json` へ動画情報とR2公開URLを追加する。
+5. `./scripts/check.sh` とローカル画面を確認する。
+6. Pull Requestを作成し、CIを通して反映する。
 
-詳細は [設計書](docs/design.md) を参照。
+詳しい設計と運用は [docs/design.md](docs/design.md) を参照。

@@ -17,6 +17,7 @@ jobs:
     if: >-
       github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
       github.event.workflow_run.pull_requests[0].number != null
     runs-on: ubuntu-latest
 
@@ -28,12 +29,13 @@ jobs:
           PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
           REPOSITORY: ${{ github.repository }}
         run: |
-          pr_json="$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid,isDraft,state)"
+          pr_json="$(gh pr view "$PR_NUMBER" --repo "$REPOSITORY" --json headRefOid,isCrossRepository,isDraft,state)"
           current_head="$(printf '%s' "$pr_json" | jq -r '.headRefOid')"
+          is_cross_repository="$(printf '%s' "$pr_json" | jq -r '.isCrossRepository')"
           is_draft="$(printf '%s' "$pr_json" | jq -r '.isDraft')"
           state="$(printf '%s' "$pr_json" | jq -r '.state')"
 
-          if [ "$state" != "OPEN" ] || [ "$is_draft" = "true" ]; then
+          if [ "$state" != "OPEN" ] || [ "$is_draft" = "true" ] || [ "$is_cross_repository" = "true" ]; then
             exit 0
           fi
 

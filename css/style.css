@@ -127,6 +127,7 @@ select {
   color: white;
   cursor: pointer;
   background: #17121f;
+  touch-action: pan-y;
 }
 
 .hero.slide-1 {
@@ -623,6 +624,14 @@ select {
   color: var(--muted);
 }
 
+.next-videos {
+  padding-top: 64px;
+}
+
+.next-videos .section-heading {
+  margin-bottom: 24px;
+}
+
 .timeline {
   display: grid;
   gap: 40px;
@@ -818,6 +827,32 @@ footer {
   .detail-actions {
     margin-top: 24px;
     align-items: flex-start;
+  }
+
+  .next-videos {
+    padding: 48px 0 0 20px;
+  }
+
+  .next-videos .section-heading {
+    padding-right: 20px;
+  }
+
+  .next-videos-grid {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 4px 20px 24px 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .next-videos-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .next-videos-grid .video-card {
+    flex: 0 0 min(82vw, 330px);
+    scroll-snap-align: start;
   }
 
   .page-shell {

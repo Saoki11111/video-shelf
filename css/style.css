@@ -877,6 +877,25 @@ footer {
     padding-right: 20px;
   }
 
+  .timeline-filter-row {
+    margin: 20px 0;
+    padding: 0 20px;
+  }
+
+  .timeline-filter-row .filter-label {
+    flex: 0 0 100%;
+    margin: 0;
+  }
+
+  .timeline-filter-row .tag-filters {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .timeline-filter-row .tag-button {
+    flex: 0 0 auto;
+  }
+
   .page-intro h1 {
     font-size: clamp(22px, 7vw, 30px);
   }

@@ -277,6 +277,25 @@ select {
   margin-top: 30px;
 }
 
+.site-concept {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 14px;
+  width: min(1120px, calc(100% - 48px));
+  margin: 22px auto 0;
+  text-align: center;
+}
+
+.site-concept p {
+  margin: 0;
+}
+
+.site-concept p:last-child {
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .hero-list-link {
   display: flex;
   justify-content: center;
@@ -773,6 +792,17 @@ footer {
   .hero-list-link {
     width: calc(100% - 40px);
     margin-top: 14px;
+  }
+
+  .site-concept {
+    display: grid;
+    gap: 4px;
+    width: calc(100% - 40px);
+    margin-top: 18px;
+  }
+
+  .site-concept p:last-child {
+    font-size: 13px;
   }
 
   .hero-list-link .page-button {

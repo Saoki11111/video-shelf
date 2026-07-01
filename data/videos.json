@@ -1,8 +1,8 @@
 [
   {
     "id": "202605-indonesia",
-    "title": "インドネシア、2026年5月の記録",
-    "description": "2026年5月に撮影したインドネシアの旅の動画。",
+    "title": "インドネシア、予定外から始まる旅",
+    "description": "空港での足止め、街の食事、旅先で出会った景色。予定どおりにいかない時間も残した記録。",
     "publishedAt": "2026-05-01",
     "addedAt": "2026-07-01",
     "tags": ["インドネシア"],
@@ -35,8 +35,8 @@
   },
   {
     "id": "202502-thai",
-    "title": "タイ、2025年2月の記録",
-    "description": "2025年2月に撮影したタイの旅の動画。",
+    "title": "タイ、夕暮れの市場を歩く",
+    "description": "夕暮れの市場、寺院の屋根、街を行き交う人々。タイで過ごした時間の記録。",
     "publishedAt": "2025-02-01",
     "addedAt": "2026-07-01",
     "tags": ["タイ"],
@@ -44,6 +44,18 @@
     "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202502-thai.mp4",
     "driveFileId": "1DXIqE6MZqkAr_sQqI1UOBJ5oy51kHSZE",
     "sortOrder": 4
+  },
+  {
+    "id": "202511-manila",
+    "title": "マニラ、ジープニーを追いかけて",
+    "description": "食堂の一皿、車窓を流れる街、銀色のジープニー。マニラで過ごした時間の記録。",
+    "publishedAt": "2025-11-01",
+    "addedAt": "2026-07-01",
+    "tags": ["マニラ"],
+    "thumbnail": "images/thumbnails/202511-manila.jpg",
+    "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202511-manila.mp4",
+    "driveFileId": "1k5oMCvCJ1r_MVL46jq44OzLXWeoVLCCf",
+    "sortOrder": 6
   },
   {
     "id": "202509-shanghai",

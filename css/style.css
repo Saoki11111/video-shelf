@@ -1,12 +1,12 @@
 :root {
-  --ink: #f7f7fb;
-  --muted: #a8a8b5;
-  --paper: #0b0b12;
-  --card: #171720;
-  --accent: #ff476f;
-  --accent-dark: #ff7896;
-  --line: #30303c;
-  --shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+  --ink: #eef4ff;
+  --muted: #a8b7d3;
+  --paper: #08152d;
+  --card: #101f3d;
+  --accent: #6fa1ff;
+  --accent-dark: #91b8ff;
+  --line: #294369;
+  --shadow: 0 22px 60px rgba(0, 6, 20, .48);
 }
 
 * {
@@ -45,7 +45,7 @@ select {
   z-index: 20;
   top: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(11, 11, 18, 0.9);
+  background: rgba(8, 21, 45, .92);
   backdrop-filter: blur(10px);
 }
 
@@ -100,16 +100,16 @@ select {
 
 .page-button-navigation {
   color: #f7f7fa;
-  border-color: rgba(255, 255, 255, .2);
-  background: #262731;
+  border-color: #31578c;
+  background: #19345f;
   box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
   transition: color 150ms ease, border-color 150ms ease, background 150ms ease, transform 150ms ease;
 }
 
 .page-button-navigation:hover {
   color: white;
-  border-color: rgba(255, 255, 255, .34);
-  background: #30323e;
+  border-color: #4776b5;
+  background: #214477;
   transform: translateY(-1px);
 }
 
@@ -127,11 +127,13 @@ select {
   width: 30px;
   height: 30px;
   color: white;
-  background: linear-gradient(135deg, #ff3868, #ff7849);
-  border-radius: 50%;
+  background: #2868e8;
+  border-radius: 10px;
   place-items: center;
-  font-size: 11px;
-  padding-left: 2px;
+  font-size: 9px;
+  font-weight: 900;
+  padding: 0;
+  box-shadow: 4px 4px 0 #163a83;
 }
 
 .hero {
@@ -168,8 +170,8 @@ select {
   inset: 0;
   content: "";
   background:
-    linear-gradient(90deg, rgba(11,11,18,.98) 0%, rgba(11,11,18,.88) 42%, rgba(11,11,18,.3) 78%, rgba(11,11,18,.2) 100%),
-    linear-gradient(0deg, rgba(11,11,18,.35), transparent 50%);
+    linear-gradient(90deg, rgba(8,21,45,.98) 0%, rgba(8,21,45,.88) 42%, rgba(8,21,45,.3) 78%, rgba(8,21,45,.2) 100%),
+    linear-gradient(0deg, rgba(8,21,45,.35), transparent 50%);
 }
 
 .hero::after {
@@ -854,7 +856,7 @@ footer {
     margin-top: -18px;
     padding: 22px 20px 0;
     border-radius: 24px 24px 0 0;
-    background: linear-gradient(180deg, rgba(11, 11, 18, 0.92), rgba(11, 11, 18, 1) 42%);
+    background: linear-gradient(180deg, rgba(8, 21, 45, .92), #08152d 42%);
   }
 
   .detail-actions {

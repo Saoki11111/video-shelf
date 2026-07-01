@@ -1,7 +1,6 @@
 import { createCard, fetchVideos } from "./shared.js";
 
 const newVideosGrid = document.querySelector("#new-videos");
-const recommendedVideosGrid = document.querySelector("#recommended-videos");
 const heroCarousel = document.querySelector("#hero-carousel");
 const heroThumbnail = document.querySelector("#hero-thumbnail");
 const heroEyebrow = document.querySelector("#hero-eyebrow");
@@ -94,12 +93,8 @@ function renderTopSections() {
   const newest = [...videos]
     .sort((a, b) => (b.addedAt ?? b.publishedAt).localeCompare(a.addedAt ?? a.publishedAt))
     .slice(0, 3);
-  const recommended = [...videos]
-    .sort((a, b) => a.sortOrder - b.sortOrder)
-    .slice(0, 3);
 
   newVideosGrid.replaceChildren(...newest.map(createCard));
-  recommendedVideosGrid.replaceChildren(...recommended.map(createCard));
 }
 
 fetchVideos()

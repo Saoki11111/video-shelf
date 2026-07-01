@@ -15,6 +15,9 @@ let videos = [];
 let featuredVideos = [];
 let activeSlide = 0;
 let carouselTimer;
+let touchStartX = 0;
+let touchStartY = 0;
+let suppressHeroClick = false;
 
 function renderCarousel() {
   const video = featuredVideos[activeSlide];
@@ -88,6 +91,10 @@ function initializeCarousel() {
   heroCarousel.addEventListener("focusin", stopCarousel);
   heroCarousel.addEventListener("focusout", startCarousel);
   heroCarousel.addEventListener("click", (event) => {
+    if (suppressHeroClick) {
+      suppressHeroClick = false;
+      return;
+    }
     if (!event.target.closest("button")) openActiveVideo();
   });
   heroCarousel.addEventListener("keydown", (event) => {
@@ -95,6 +102,23 @@ function initializeCarousel() {
     event.preventDefault();
     openActiveVideo();
   });
+  heroCarousel.addEventListener("touchstart", (event) => {
+    const touch = event.changedTouches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    stopCarousel();
+  }, { passive: true });
+  heroCarousel.addEventListener("touchend", (event) => {
+    const touch = event.changedTouches[0];
+    const distanceX = touch.clientX - touchStartX;
+    const distanceY = touch.clientY - touchStartY;
+    if (Math.abs(distanceX) >= 50 && Math.abs(distanceX) > Math.abs(distanceY)) {
+      suppressHeroClick = true;
+      selectSlide(activeSlide + (distanceX < 0 ? 1 : -1));
+    }
+    startCarousel();
+  }, { passive: true });
+  heroCarousel.addEventListener("touchcancel", startCarousel, { passive: true });
 
   renderCarousel();
   startCarousel();

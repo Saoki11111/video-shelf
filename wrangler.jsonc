@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "video-shelf",
+  "pages_build_output_dir": ".",
+  "compatibility_date": "2026-06-30",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "video-shelf-views",
+      "database_id": "eaacfacf-ec73-4726-8bc6-ca2506f7a3af"
+    }
+  ]
+}

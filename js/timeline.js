@@ -4,11 +4,9 @@ const summary = document.querySelector("#timeline-summary");
 const timeline = document.querySelector("#timeline");
 const emptyState = document.querySelector("#timeline-empty");
 const tagFilters = document.querySelector("#tag-filters");
-const sortSelect = document.querySelector("#sort-select");
 
 let videos = [];
 let selectedTag = "すべて";
-let viewCounts = {};
 
 function renderTags() {
   tagFilters.replaceChildren();
@@ -19,7 +17,6 @@ function renderTags() {
     button.type = "button";
     button.className = `tag-button${tag === selectedTag ? " active" : ""}`;
     button.textContent = tag;
-    button.setAttribute("aria-pressed", String(tag === selectedTag));
     button.addEventListener("click", () => {
       selectedTag = tag;
       renderTags();
@@ -34,39 +31,7 @@ function renderTimeline() {
 
   const filtered = videos
     .filter((video) => selectedTag === "すべて" || video.tags.includes(selectedTag))
-    .sort((a, b) => sortSelect.value === "popular"
-      ? (viewCounts[b.id] ?? 0) - (viewCounts[a.id] ?? 0)
-        || b.publishedAt.localeCompare(a.publishedAt)
-      : b.publishedAt.localeCompare(a.publishedAt));
-
-  if (sortSelect.value === "popular") {
-    summary.textContent = selectedTag === "すべて"
-      ? `${filtered.length}本 / 人気順`
-      : `${selectedTag}で ${filtered.length}本 / 人気順`;
-
-    if (filtered.length === 0) {
-      emptyState.textContent = "該当する動画はありません。";
-      emptyState.hidden = false;
-      return;
-    }
-
-    emptyState.hidden = true;
-    const section = document.createElement("section");
-    section.className = "timeline-year";
-    const heading = document.createElement("div");
-    heading.className = "timeline-heading";
-    const title = document.createElement("h2");
-    title.textContent = "人気順";
-    const note = document.createElement("p");
-    note.textContent = `${filtered.length}本`;
-    heading.append(title, note);
-    const grid = document.createElement("div");
-    grid.className = "video-grid timeline-grid";
-    grid.append(...filtered.map(createCard));
-    section.append(heading, grid);
-    timeline.append(section);
-    return;
-  }
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 
   const grouped = new Map();
   filtered.forEach((video) => {
@@ -112,17 +77,9 @@ function renderTimeline() {
   timeline.append(fragment);
 }
 
-sortSelect.addEventListener("change", renderTimeline);
-
-Promise.all([
-  fetchVideos(),
-  fetch("api/views")
-    .then((response) => response.ok ? response.json() : { views: {} })
-    .catch(() => ({ views: {} }))
-])
-  .then(([data, popularity]) => {
+fetchVideos()
+  .then((data) => {
     videos = data;
-    viewCounts = popularity.views ?? {};
     renderTags();
     renderTimeline();
   })

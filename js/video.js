@@ -10,50 +10,6 @@ const tags = document.querySelector("#detail-tags");
 const nextVideos = document.querySelector("#next-videos");
 const nextVideosGrid = document.querySelector("#next-videos-grid");
 const id = new URLSearchParams(location.search).get("id");
-const VIEW_THRESHOLD_SECONDS = 10;
-const VIEW_DEDUPLICATION_MS = 24 * 60 * 60 * 1000;
-
-function viewStorageKey(videoId) {
-  return `video-log:viewed:${videoId}`;
-}
-
-function wasRecentlyCounted(videoId) {
-  try {
-    const countedAt = Number(localStorage.getItem(viewStorageKey(videoId)));
-    return Number.isFinite(countedAt) && Date.now() - countedAt < VIEW_DEDUPLICATION_MS;
-  } catch {
-    return false;
-  }
-}
-
-function rememberCount(videoId) {
-  try {
-    localStorage.setItem(viewStorageKey(videoId), String(Date.now()));
-  } catch {
-    // Playback should continue when storage is unavailable.
-  }
-}
-
-function trackView(videoElement, videoId) {
-  if (wasRecentlyCounted(videoId)) return;
-
-  const onTimeUpdate = () => {
-    if (videoElement.currentTime < VIEW_THRESHOLD_SECONDS) return;
-    videoElement.removeEventListener("timeupdate", onTimeUpdate);
-    fetch("api/views", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ videoId }),
-      keepalive: true
-    }).then((response) => {
-      if (response.ok) rememberCount(videoId);
-    }).catch(() => {
-      // Analytics failure must not affect playback.
-    });
-  };
-
-  videoElement.addEventListener("timeupdate", onTimeUpdate);
-}
 
 function getRandomVideos(videos, currentVideoId) {
   const candidates = videos.filter((video) => video.id !== currentVideoId);
@@ -95,7 +51,6 @@ function renderVideo(video, videos) {
     videoElement.preload = "metadata";
     videoElement.poster = video.thumbnail;
     videoElement.addEventListener("ended", showNextVideos);
-    trackView(videoElement, video.id);
     player.append(videoElement);
   } else {
     const unavailable = document.createElement("p");

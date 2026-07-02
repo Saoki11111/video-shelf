@@ -10,7 +10,12 @@ node --check js/all.js
 node --check js/shared.js
 node --check js/timeline.js
 node --check js/video.js
+node --check functions/api/views.js
 python3 -m json.tool data/videos.json >/dev/null
+python3 -m json.tool wrangler.jsonc >/dev/null
+
+grep -q "Content-Security-Policy:" _headers
+grep -q "CREATE TABLE IF NOT EXISTS video_views" migrations/0001_create_video_views.sql
 
 python3 - <<'PY'
 import json

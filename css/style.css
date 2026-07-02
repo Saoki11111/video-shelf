@@ -731,6 +731,10 @@ select {
   margin-top: 8px;
 }
 
+.timeline-sort-control {
+  margin-left: auto;
+}
+
 .page-intro h1 {
   font-family: inherit;
   font-weight: 800;
@@ -948,6 +952,12 @@ footer {
 
   .timeline-filter-row .tag-button {
     flex: 0 0 auto;
+  }
+
+  .timeline-sort-control {
+    width: 100%;
+    margin: 12px 0 0;
+    justify-content: space-between;
   }
 
   .page-intro h1 {

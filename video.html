@@ -33,9 +33,6 @@
             <h1 id="detail-title"></h1>
             <p id="detail-date" class="detail-date"></p>
             <p id="detail-description" class="detail-description"></p>
-            <div class="detail-actions">
-              <a class="page-button page-button-navigation" href="index.html">トップへ戻る</a>
-            </div>
           </article>
         </div>
         <section id="next-videos" class="next-videos" aria-labelledby="next-videos-title">
@@ -45,7 +42,13 @@
               <h2 id="next-videos-title">次に見る</h2>
             </div>
           </div>
-          <div id="next-videos-grid" class="video-grid next-videos-grid"></div>
+          <div class="next-videos-carousel">
+            <div id="next-videos-grid" class="video-grid next-videos-grid"></div>
+            <div class="next-videos-navigation" aria-label="次に見る動画を移動">
+              <button id="next-videos-prev" type="button" aria-label="前の動画">‹</button>
+              <button id="next-videos-next" type="button" aria-label="次の動画">›</button>
+            </div>
+          </div>
         </section>
       </div>
       <p id="error-state" class="empty-state" hidden>動画が見つかりません。</p>

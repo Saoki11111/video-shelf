@@ -15,6 +15,8 @@ DB、ログイン、管理画面、フレームワークは使用しない。
 
 Cloudflare Web AnalyticsはPages側で有効化し、`_headers`でCSPなどのセキュリティ設定とサムネイルの長期キャッシュを管理する。
 
+現在の画面構成、SPレイアウト、タグ絞り込みなどの実装状況は [docs/design.md](docs/design.md) の「画面構成」「現在の実装状況」に記載する。
+
 ## ローカル起動
 
 ```bash

@@ -486,9 +486,9 @@ select {
 }
 
 .tag-button.active {
-  color: white;
-  border-color: var(--accent);
-  background: var(--accent);
+  color: var(--ink);
+  border-color: #4776b5;
+  background: #214477;
 }
 
 .result-count {

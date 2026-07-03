@@ -714,7 +714,7 @@ select {
 }
 
 .timeline-grid {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .library-page {
@@ -944,6 +944,14 @@ footer {
   .timeline-filter-row .tag-filters {
     flex: 1 1 100%;
     min-width: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .timeline-filter-row .tag-filters::-webkit-scrollbar {
+    display: none;
   }
 
   .timeline-filter-row .tag-button {
@@ -959,7 +967,46 @@ footer {
   }
 
   .timeline-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .timeline .video-card {
+    border-radius: 10px;
+  }
+
+  .timeline .card-body {
+    padding: 10px;
+  }
+
+  .timeline .card-tags {
+    gap: 3px;
+  }
+
+  .timeline .card-tags span {
+    font-size: 10px;
+  }
+
+  .timeline .card-title {
+    display: -webkit-box;
+    min-height: 3em;
+    overflow: hidden;
+    margin: 5px 0 3px;
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .timeline .card-date {
+    font-size: 11px;
+  }
+
+  .timeline .play-mark {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
   }
 
   .timeline-heading {

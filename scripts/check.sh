@@ -12,6 +12,10 @@ node --check js/timeline.js
 node --check js/video.js
 python3 -m json.tool data/videos.json >/dev/null
 
+grep -q "Content-Security-Policy:" _headers
+grep -q "static.cloudflareinsights.com" _headers
+grep -q "Cache-Control: public, max-age=31536000, immutable" _headers
+
 python3 - <<'PY'
 import json
 from pathlib import Path

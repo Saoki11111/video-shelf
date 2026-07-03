@@ -37,8 +37,10 @@ export function createCard(video) {
   thumbnail.className = "card-thumbnail";
   thumbnail.src = video.thumbnail;
   thumbnail.alt = "";
-  thumbnail.loading = "lazy";
-  thumbnail.decoding = "async";
+  thumbnail.width = 1280;
+  thumbnail.height = 720;
+  thumbnail.loading = "eager";
+  thumbnail.decoding = "sync";
   const playMark = document.createElement("span");
   playMark.className = "play-mark";
   playMark.setAttribute("aria-hidden", "true");

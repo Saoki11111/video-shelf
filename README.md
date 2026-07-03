@@ -13,6 +13,8 @@
 
 DB、ログイン、管理画面、フレームワークは使用しない。
 
+Cloudflare Web AnalyticsはPages側で有効化し、`_headers`でCSPなどのセキュリティ設定とサムネイルの長期キャッシュを管理する。
+
 ## ローカル起動
 
 ```bash

@@ -9,7 +9,13 @@ const description = document.querySelector("#detail-description");
 const tags = document.querySelector("#detail-tags");
 const nextVideos = document.querySelector("#next-videos");
 const nextVideosGrid = document.querySelector("#next-videos-grid");
+const nextVideosPrev = document.querySelector("#next-videos-prev");
+const nextVideosNext = document.querySelector("#next-videos-next");
 const id = new URLSearchParams(location.search).get("id");
+let nextVideosTouchStartX = 0;
+let nextVideosTouchStartY = 0;
+let suppressNextVideoClick = false;
+let nextVideosAnimating = false;
 
 function getRandomVideos(videos, currentVideoId) {
   const candidates = videos.filter((video) => video.id !== currentVideoId);
@@ -27,6 +33,59 @@ function showNextVideos() {
     block: "start"
   });
 }
+
+function rotateNextVideos(direction) {
+  if (nextVideosAnimating) return;
+  const cards = [...nextVideosGrid.querySelectorAll(".video-card")];
+  if (cards.length < 2) return;
+  const distance = cards[0].getBoundingClientRect().width + 12;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  nextVideosAnimating = true;
+
+  if (direction > 0) {
+    nextVideosGrid.scrollTo({ left: distance, behavior: reducedMotion ? "auto" : "smooth" });
+    setTimeout(() => {
+      nextVideosGrid.append(cards[0]);
+      nextVideosGrid.scrollLeft = 0;
+      nextVideosAnimating = false;
+    }, reducedMotion ? 0 : 220);
+    return;
+  }
+
+  nextVideosGrid.prepend(cards.at(-1));
+  nextVideosGrid.scrollLeft = distance;
+  requestAnimationFrame(() => {
+    nextVideosGrid.scrollTo({ left: 0, behavior: reducedMotion ? "auto" : "smooth" });
+    setTimeout(() => {
+      nextVideosAnimating = false;
+    }, reducedMotion ? 0 : 220);
+  });
+}
+
+nextVideosPrev.addEventListener("click", () => rotateNextVideos(-1));
+nextVideosNext.addEventListener("click", () => rotateNextVideos(1));
+nextVideosGrid.addEventListener("touchstart", (event) => {
+  const touch = event.changedTouches[0];
+  nextVideosTouchStartX = touch.clientX;
+  nextVideosTouchStartY = touch.clientY;
+}, { passive: true });
+nextVideosGrid.addEventListener("touchend", (event) => {
+  const touch = event.changedTouches[0];
+  const distanceX = touch.clientX - nextVideosTouchStartX;
+  const distanceY = touch.clientY - nextVideosTouchStartY;
+  if (Math.abs(distanceX) >= 40 && Math.abs(distanceX) > Math.abs(distanceY)) {
+    suppressNextVideoClick = true;
+    rotateNextVideos(distanceX < 0 ? 1 : -1);
+    setTimeout(() => {
+      suppressNextVideoClick = false;
+    }, 300);
+  }
+}, { passive: true });
+nextVideosGrid.addEventListener("click", (event) => {
+  if (!suppressNextVideoClick) return;
+  event.preventDefault();
+  suppressNextVideoClick = false;
+});
 
 function renderVideo(video, videos) {
   document.title = `${video.title} | Video Log`;

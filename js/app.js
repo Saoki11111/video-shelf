@@ -10,6 +10,8 @@ const heroNumber = document.querySelector("#hero-number");
 const carouselPrev = document.querySelector("#carousel-prev");
 const carouselNext = document.querySelector("#carousel-next");
 const carouselDots = document.querySelector("#carousel-dots");
+const newVideosPrev = document.querySelector("#new-videos-prev");
+const newVideosNext = document.querySelector("#new-videos-next");
 
 let videos = [];
 let featuredVideos = [];
@@ -18,6 +20,10 @@ let carouselTimer;
 let touchStartX = 0;
 let touchStartY = 0;
 let suppressHeroClick = false;
+let newVideosTouchStartX = 0;
+let newVideosTouchStartY = 0;
+let suppressNewVideoClick = false;
+let newVideosAnimating = false;
 
 function renderCarousel() {
   const video = featuredVideos[activeSlide];
@@ -56,6 +62,34 @@ function startCarousel() {
   stopCarousel();
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   carouselTimer = setInterval(() => selectSlide(activeSlide + 1), 5000);
+}
+
+function rotateNewVideos(direction) {
+  if (newVideosAnimating) return;
+  const cards = [...newVideosGrid.querySelectorAll(".video-card")];
+  if (cards.length < 2) return;
+  const distance = cards[0].getBoundingClientRect().width + 12;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  newVideosAnimating = true;
+
+  if (direction > 0) {
+    newVideosGrid.scrollTo({ left: distance, behavior: reducedMotion ? "auto" : "smooth" });
+    setTimeout(() => {
+      newVideosGrid.append(cards[0]);
+      newVideosGrid.scrollLeft = 0;
+      newVideosAnimating = false;
+    }, reducedMotion ? 0 : 220);
+    return;
+  }
+
+  newVideosGrid.prepend(cards.at(-1));
+  newVideosGrid.scrollLeft = distance;
+  requestAnimationFrame(() => {
+    newVideosGrid.scrollTo({ left: 0, behavior: reducedMotion ? "auto" : "smooth" });
+    setTimeout(() => {
+      newVideosAnimating = false;
+    }, reducedMotion ? 0 : 220);
+  });
 }
 
 function initializeCarousel() {
@@ -131,6 +165,31 @@ function renderTopSections() {
 
   newVideosGrid.replaceChildren(...newest.map(createCard));
 }
+
+newVideosPrev.addEventListener("click", () => rotateNewVideos(-1));
+newVideosNext.addEventListener("click", () => rotateNewVideos(1));
+newVideosGrid.addEventListener("touchstart", (event) => {
+  const touch = event.changedTouches[0];
+  newVideosTouchStartX = touch.clientX;
+  newVideosTouchStartY = touch.clientY;
+}, { passive: true });
+newVideosGrid.addEventListener("touchend", (event) => {
+  const touch = event.changedTouches[0];
+  const distanceX = touch.clientX - newVideosTouchStartX;
+  const distanceY = touch.clientY - newVideosTouchStartY;
+  if (Math.abs(distanceX) >= 40 && Math.abs(distanceX) > Math.abs(distanceY)) {
+    suppressNewVideoClick = true;
+    rotateNewVideos(distanceX < 0 ? 1 : -1);
+    setTimeout(() => {
+      suppressNewVideoClick = false;
+    }, 300);
+  }
+}, { passive: true });
+newVideosGrid.addEventListener("click", (event) => {
+  if (!suppressNewVideoClick) return;
+  event.preventDefault();
+  suppressNewVideoClick = false;
+});
 
 fetchVideos()
   .then((data) => {

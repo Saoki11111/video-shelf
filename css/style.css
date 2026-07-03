@@ -198,7 +198,7 @@ select {
   overflow: hidden;
   margin: 10px 0 18px;
   font-family: inherit;
-  font-size: clamp(36px, 5vw, 58px);
+  font-size: clamp(24px, 3.4vw, 39px);
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.03em;
@@ -374,7 +374,7 @@ select {
 .page-intro h1 {
   margin: 8px 0 10px;
   font-family: Georgia, "Yu Mincho", serif;
-  font-size: clamp(26px, 3.6vw, 42px);
+  font-size: clamp(18px, 2.4vw, 28px);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -409,6 +409,14 @@ select {
   color: var(--ink);
 }
 
+.shelf-navigation {
+  display: none;
+}
+
+.shelf-carousel {
+  position: relative;
+}
+
 .section-heading {
   display: flex;
   align-items: end;
@@ -419,7 +427,7 @@ select {
 .section-heading h2 {
   margin: 6px 0 0;
   font-family: inherit;
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 800;
 }
 
@@ -455,6 +463,17 @@ select {
   margin-right: 6px;
   color: var(--muted);
   font-size: 13px;
+}
+
+.tag-carousel {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+}
+
+.tag-carousel-navigation {
+  display: none;
 }
 
 .tag-button {
@@ -575,7 +594,7 @@ select {
   margin: 8px 0 4px;
   font-family: inherit;
   font-weight: 750;
-  font-size: 21px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -653,7 +672,7 @@ select {
 .detail-layout h1 {
   margin: 8px 0;
   font-family: inherit;
-  font-size: clamp(32px, 5vw, 52px);
+  font-size: clamp(22px, 3.4vw, 36px);
   font-weight: 800;
   line-height: 1.35;
 }
@@ -692,7 +711,7 @@ select {
 .timeline-heading h2 {
   margin: 0;
   font-family: inherit;
-  font-size: 22px;
+  font-size: 15px;
   font-weight: 800;
 }
 
@@ -752,7 +771,7 @@ footer {
 
   .hero h1 {
     max-width: 100%;
-    font-size: clamp(28px, 9vw, 42px);
+    font-size: clamp(20px, 6vw, 28px);
   }
 
   .carousel-arrow {
@@ -814,9 +833,49 @@ footer {
     padding-right: 20px;
   }
 
-  .shelf-grid {
+  .shelf-navigation {
+    display: flex;
+    position: absolute;
+    z-index: 5;
+    top: 16vw;
+    right: 28px;
+    left: 8px;
+    justify-content: space-between;
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+
+  .shelf-navigation button {
     display: grid;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    cursor: pointer;
+    background: var(--card);
+    font-size: 22px;
+    line-height: 1;
+    pointer-events: auto;
+    place-items: center;
+  }
+
+  .shelf-navigation button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .shelf-grid {
+    display: flex;
+    gap: 12px;
+    overflow: hidden;
     padding: 4px 20px 24px 0;
+    touch-action: pan-y;
+  }
+
+  .shelf-grid .video-card {
+    flex: 0 0 calc((100vw - 52px) / 2);
   }
 
   .section-heading,
@@ -897,7 +956,7 @@ footer {
   }
 
   .timeline-filter-row .tag-filters {
-    flex: 1 1 100%;
+    flex: 1;
     min-width: 0;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -909,12 +968,38 @@ footer {
     display: none;
   }
 
+  .tag-carousel {
+    flex: 1 1 100%;
+    gap: 6px;
+  }
+
+  .tag-carousel-navigation {
+    display: grid;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    cursor: pointer;
+    background: var(--card);
+    font-size: 20px;
+    line-height: 1;
+    place-items: center;
+  }
+
+  .tag-carousel-navigation:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   .timeline-filter-row .tag-button {
     flex: 0 0 auto;
   }
 
   .page-intro h1 {
-    font-size: clamp(22px, 7vw, 30px);
+    font-size: clamp(18px, 5vw, 22px);
   }
 
   .page-intro p:last-child {
@@ -947,7 +1032,7 @@ footer {
     min-height: 3em;
     overflow: hidden;
     margin: 5px 0 3px;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.5;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -971,7 +1056,7 @@ footer {
   }
 
   .timeline-heading h2 {
-    font-size: 20px;
+    font-size: 14px;
   }
 
   .page-button {

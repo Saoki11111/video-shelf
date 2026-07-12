@@ -40,7 +40,7 @@ R2_PUBLIC_URL=R2バケットの公開URL（例: https://pub-xxxxxx.r2.dev）
 3. 以下を設定して「Save」します：
    - **Name**: `video-shelf-mcp`
    - **Type**: `stdio`
-   - **Command**: `node /Users/shuaoki/workspace/video-shelf/mcp-server/index.js`
+   - **Command**: `node /path/to/your/video-shelf/mcp-server/index.js`
      *(※ `node` コマンドがパスに通っている必要があります。絶対パスで指定してください)*
 
 ### B. Claude Desktop の場合
@@ -54,7 +54,7 @@ R2_PUBLIC_URL=R2バケットの公開URL（例: https://pub-xxxxxx.r2.dev）
     "video-shelf": {
       "command": "node",
       "args": [
-        "/Users/shuaoki/workspace/video-shelf/mcp-server/index.js"
+        "/path/to/your/video-shelf/mcp-server/index.js"
       ],
       "env": {
         "CLOUDFLARE_ACCOUNT_ID": "あなたのアカウントID",

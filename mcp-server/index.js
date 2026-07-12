@@ -4,14 +4,16 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { exec } from "child_process";
+import { promisify } from "util";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
 import * as fs from "fs/promises";
-import { createReadStream } from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
+
+const execPromise = promisify(exec);
 
 // .env から環境変数を読み込む
 dotenv.config();
@@ -22,35 +24,6 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, "..");
-
-// R2 クライアントの初期化（環境変数がある場合のみ）
-let s3Client = null;
-function getS3Client() {
-  if (s3Client) return s3Client;
-
-  const {
-    CLOUDFLARE_ACCOUNT_ID,
-    R2_ACCESS_KEY_ID,
-    R2_SECRET_ACCESS_KEY,
-  } = process.env;
-
-  if (!CLOUDFLARE_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
-    throw new Error(
-      "Cloudflare R2の接続情報が不足しています。環境変数 CLOUDFLARE_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY を設定してください。"
-    );
-  }
-
-  s3Client = new S3Client({
-    endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-    credentials: {
-      accessKeyId: R2_ACCESS_KEY_ID,
-      secretAccessKey: R2_SECRET_ACCESS_KEY,
-    },
-    region: "auto",
-  });
-
-  return s3Client;
-}
 
 // MCPサーバーの作成
 const server = new Server(
@@ -93,7 +66,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "upload_to_r2",
-        description: "ローカルファイルをCloudflare R2バケットにアップロードします。",
+        description: "ローカルファイルをCloudflare R2バケットにアップロードします（内部でwranglerを使用します）。",
         inputSchema: {
           type: "object",
           properties: {
@@ -204,49 +177,28 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         : path.join(PROJECT_ROOT, args.filePath);
       const destinationKey = args.destinationKey;
 
-      const bucketName = process.env.R2_BUCKET_NAME;
-      if (!bucketName) {
-        throw new Error("環境変数 R2_BUCKET_NAME が設定されていません。");
-      }
+      const bucketName = process.env.R2_BUCKET_NAME || "video-shelf";
 
       // ファイルの存在確認
       await fs.access(filePath);
 
-      // 拡張子から MIME タイプの推測
-      const ext = path.extname(filePath).toLowerCase();
-      let contentType = "application/octet-stream";
-      if (ext === ".mp4") contentType = "video/mp4";
-      else if (ext === ".webp") contentType = "image/webp";
-      else if (ext === ".jpg" || ext === ".jpeg") contentType = "image/jpeg";
-      else if (ext === ".png") contentType = "image/png";
-
-      const client = getS3Client();
-      const fileStream = createReadStream(filePath);
-
-      // ファイルサイズの取得（S3に送信するため）
-      const stats = await fs.stat(filePath);
-
-      const uploadParams = {
-        Bucket: bucketName,
-        Key: destinationKey,
-        Body: fileStream,
-        ContentType: contentType,
-        ContentLength: stats.size,
-      };
-
-      await client.send(new PutObjectCommand(uploadParams));
+      // wrangler コマンドでR2にアップロード
+      // 例: npx wrangler@3 r2 object put video-shelf/videos/xxx.mp4 --file=/path/to/xxx.mp4
+      const command = `npx wrangler@3 r2 object put ${bucketName}/${destinationKey} --file="${filePath}"`;
+      
+      await execPromise(command, { cwd: PROJECT_ROOT });
 
       // 公開URLの生成
       const publicBaseUrl =
         process.env.R2_PUBLIC_URL ||
-        `https://${bucketName}.r2.dev`; // デフォルトフォールバック
+        "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev";
       const publicUrl = `${publicBaseUrl.replace(/\/$/, "")}/${destinationKey}`;
 
       return {
         content: [
           {
             type: "text",
-            text: `R2へのアップロードが完了しました。\n公開URL: ${publicUrl}`,
+            text: `wrangler経由でR2へのアップロードが完了しました。\n公開URL: ${publicUrl}`,
           },
         ],
       };

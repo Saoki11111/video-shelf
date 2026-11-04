@@ -14,15 +14,9 @@ const newVideosPrev = document.querySelector("#new-videos-prev");
 const newVideosNext = document.querySelector("#new-videos-next");
 
 const CATEGORIES = [
-  { eyebrow: "CATEGORY 01 — SOUND", title: "街の音が残る旅", note: "喧騒、エンジン、街角のざわめきが主役のもの", ids: ["202603-hongkong", "202511-manila", "202509-shanghai", "202605-indonesia"] },
-  { eyebrow: "CATEGORY 02 — TIME", title: "ゆっくり流れる時間", note: "急がない旅。海と牧場と、島の速度", ids: ["202601-ishigaki", "202609-sapporo", "202502-thai", "202605-indonesia"] },
-  { eyebrow: "CATEGORY 03 — LIGHT", title: "夕暮れと夜の光", note: "一日の終わりの色が残るもの", ids: ["202502-thai", "202603-hongkong", "202609-sapporo", "202509-shanghai"] },
-  { eyebrow: "CATEGORY 04 — RIDE", title: "乗り物から見る景色", note: "移動そのものが思い出になっている旅", ids: ["202511-manila", "202603-hongkong", "202605-indonesia"] },
-  { eyebrow: "CATEGORY 05 — FOOD", title: "市場と食の記憶", note: "その土地の味と匂いが残るもの", ids: ["202502-thai", "202511-manila", "202605-indonesia", "202609-sapporo"] },
-  { eyebrow: "CATEGORY 06 — BLUE", title: "青い景色", note: "空と海と港。青が主役の旅", ids: ["202609-sapporo", "202601-ishigaki", "202603-hongkong"] },
-  { eyebrow: "CATEGORY 07 — LANDMARK", title: "街のシンボルを訪ねて", note: "その街の「顔」が映っているもの", ids: ["202609-sapporo", "202502-thai", "202509-shanghai"] },
-  { eyebrow: "CATEGORY 08 — SOUTHEAST ASIA", title: "東南アジアの旅", note: "この棚の中心地帯。熱気と市場の3本", ids: ["202605-indonesia", "202502-thai", "202511-manila"] },
-  { eyebrow: "CATEGORY 09 — ARCHIVE 2026", title: "2026年の旅", note: "年ごとに増えていくアーカイブ棚", ids: ["202609-sapporo", "202605-indonesia", "202603-hongkong", "202601-ishigaki"] },
+  { eyebrow: "CATEGORY 01 — TIME", title: "ゆっくり流れる時間", note: "急がない旅。海と牧場と、島の速度", ids: ["202601-ishigaki", "202609-sapporo", "202502-thai", "202605-indonesia"] },
+  { eyebrow: "CATEGORY 02 — BLUE", title: "青い景色", note: "空と海と港。青が主役の旅", ids: ["202609-sapporo", "202601-ishigaki", "202603-hongkong"] },
+  { eyebrow: "CATEGORY 03 — LANDMARK", title: "街のシンボルを訪ねて", note: "その街の「顔」が映っているもの", ids: ["202609-sapporo", "202502-thai", "202509-shanghai"] },
 ];
 
 function setTitleLines(element, title) {
@@ -36,12 +30,33 @@ function setTitleLines(element, title) {
 }
 
 function setSentenceLines(element, description) {
-  const sentences = description.split("。").map((s) => s.trim()).filter(Boolean);
-  element.replaceChildren(...sentences.map((sentence) => {
-    const line = document.createElement("span");
-    line.textContent = `${sentence}。`;
-    return line;
-  }));
+  const MAX_LINE_LENGTH = 16;
+  const lines = [];
+  description
+    .split("。")
+    .map((sentence) => sentence.trim())
+    .filter(Boolean)
+    .forEach((sentence) => {
+      const fragments = sentence.split("、");
+      let current = "";
+      fragments.forEach((fragment, index) => {
+        const piece = index < fragments.length - 1 ? `${fragment}、` : `${fragment}。`;
+        if (current && (current + piece).length > MAX_LINE_LENGTH) {
+          lines.push(current);
+          current = piece;
+        } else {
+          current += piece;
+        }
+      });
+      if (current) lines.push(current);
+    });
+  element.replaceChildren(
+    ...lines.map((text) => {
+      const line = document.createElement("span");
+      line.textContent = text;
+      return line;
+    }),
+  );
 }
 
 let videos = [];
@@ -51,10 +66,6 @@ let carouselTimer;
 let touchStartX = 0;
 let touchStartY = 0;
 let suppressHeroClick = false;
-let newVideosTouchStartX = 0;
-let newVideosTouchStartY = 0;
-let suppressNewVideoClick = false;
-let newVideosAnimating = false;
 
 function renderCarousel() {
   const video = featuredVideos[activeSlide];
@@ -95,32 +106,64 @@ function startCarousel() {
   carouselTimer = setInterval(() => selectSlide(activeSlide + 1), 5000);
 }
 
-function rotateNewVideos(direction) {
-  if (newVideosAnimating) return;
-  const cards = [...newVideosGrid.querySelectorAll(".video-card")];
-  if (cards.length < 2) return;
-  const distance = cards[0].getBoundingClientRect().width + 12;
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  newVideosAnimating = true;
+function createRowRotator(grid) {
+  let animating = false;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let suppressClick = false;
 
-  if (direction > 0) {
-    newVideosGrid.scrollTo({ left: distance, behavior: reducedMotion ? "auto" : "smooth" });
-    setTimeout(() => {
-      newVideosGrid.append(cards[0]);
-      newVideosGrid.scrollLeft = 0;
-      newVideosAnimating = false;
-    }, reducedMotion ? 0 : 220);
-    return;
+  function rotate(direction) {
+    if (animating) return;
+    const cards = [...grid.querySelectorAll(".video-card")];
+    if (cards.length < 2) return;
+    const distance = cards[0].getBoundingClientRect().width + 12;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    animating = true;
+
+    if (direction > 0) {
+      grid.scrollTo({ left: distance, behavior: reducedMotion ? "auto" : "smooth" });
+      setTimeout(() => {
+        grid.append(cards[0]);
+        grid.scrollLeft = 0;
+        animating = false;
+      }, reducedMotion ? 0 : 220);
+      return;
+    }
+
+    grid.prepend(cards.at(-1));
+    grid.scrollLeft = distance;
+    requestAnimationFrame(() => {
+      grid.scrollTo({ left: 0, behavior: reducedMotion ? "auto" : "smooth" });
+      setTimeout(() => {
+        animating = false;
+      }, reducedMotion ? 0 : 220);
+    });
   }
 
-  newVideosGrid.prepend(cards.at(-1));
-  newVideosGrid.scrollLeft = distance;
-  requestAnimationFrame(() => {
-    newVideosGrid.scrollTo({ left: 0, behavior: reducedMotion ? "auto" : "smooth" });
-    setTimeout(() => {
-      newVideosAnimating = false;
-    }, reducedMotion ? 0 : 220);
+  grid.addEventListener("touchstart", (event) => {
+    const touch = event.changedTouches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+  }, { passive: true });
+  grid.addEventListener("touchend", (event) => {
+    const touch = event.changedTouches[0];
+    const distanceX = touch.clientX - touchStartX;
+    const distanceY = touch.clientY - touchStartY;
+    if (Math.abs(distanceX) >= 40 && Math.abs(distanceX) > Math.abs(distanceY)) {
+      suppressClick = true;
+      rotate(distanceX < 0 ? 1 : -1);
+      setTimeout(() => {
+        suppressClick = false;
+      }, 300);
+    }
+  }, { passive: true });
+  grid.addEventListener("click", (event) => {
+    if (!suppressClick) return;
+    event.preventDefault();
+    suppressClick = false;
   });
+
+  return { rotate };
 }
 
 function initializeCarousel() {
@@ -224,39 +267,37 @@ function renderCategories() {
     headingText.append(eyebrow, title, note);
     heading.append(headingText);
 
+    const carousel = document.createElement("div");
+    carousel.className = "shelf-carousel";
     const grid = document.createElement("div");
-    grid.className = "video-grid category-grid";
+    grid.className = "video-grid category-grid shelf-grid";
     grid.append(...items.map(createCard));
 
-    section.append(heading, grid);
+    const navigation = document.createElement("div");
+    navigation.className = "shelf-navigation";
+    const prev = document.createElement("button");
+    prev.type = "button";
+    prev.setAttribute("aria-label", `${category.title}の前の動画`);
+    prev.textContent = "‹";
+    const next = document.createElement("button");
+    next.type = "button";
+    next.setAttribute("aria-label", `${category.title}の次の動画`);
+    next.textContent = "›";
+    navigation.append(prev, next);
+
+    const rotator = createRowRotator(grid);
+    prev.addEventListener("click", () => rotator.rotate(-1));
+    next.addEventListener("click", () => rotator.rotate(1));
+
+    carousel.append(grid, navigation);
+    section.append(heading, carousel);
     wrap.append(section);
   });
 }
 
-newVideosPrev.addEventListener("click", () => rotateNewVideos(-1));
-newVideosNext.addEventListener("click", () => rotateNewVideos(1));
-newVideosGrid.addEventListener("touchstart", (event) => {
-  const touch = event.changedTouches[0];
-  newVideosTouchStartX = touch.clientX;
-  newVideosTouchStartY = touch.clientY;
-}, { passive: true });
-newVideosGrid.addEventListener("touchend", (event) => {
-  const touch = event.changedTouches[0];
-  const distanceX = touch.clientX - newVideosTouchStartX;
-  const distanceY = touch.clientY - newVideosTouchStartY;
-  if (Math.abs(distanceX) >= 40 && Math.abs(distanceX) > Math.abs(distanceY)) {
-    suppressNewVideoClick = true;
-    rotateNewVideos(distanceX < 0 ? 1 : -1);
-    setTimeout(() => {
-      suppressNewVideoClick = false;
-    }, 300);
-  }
-}, { passive: true });
-newVideosGrid.addEventListener("click", (event) => {
-  if (!suppressNewVideoClick) return;
-  event.preventDefault();
-  suppressNewVideoClick = false;
-});
+const newVideosRotator = createRowRotator(newVideosGrid);
+newVideosPrev.addEventListener("click", () => newVideosRotator.rotate(-1));
+newVideosNext.addEventListener("click", () => newVideosRotator.rotate(1));
 
 fetchVideos()
   .then((data) => {

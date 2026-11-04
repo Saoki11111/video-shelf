@@ -610,6 +610,16 @@ select {
   font-size: 13px;
 }
 
+.card-music {
+  margin: 0 0 4px;
+  color: #bcd2f5;
+  font-size: 12px;
+}
+
+.artist-filter-row {
+  margin-top: 0;
+}
+
 .empty-state {
   padding: 60px 24px;
   color: var(--muted);

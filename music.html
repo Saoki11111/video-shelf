@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="動画で使った曲の一覧">
+    <title>使用曲 | Video Shelf</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/music.js" type="module"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="トップへ">
+        <span class="brand-mark">VS</span>
+        <span>Video Shelf</span>
+      </a>
+      <nav class="site-nav" aria-label="ページ">
+        <a href="index.html">トップ</a>
+        <a href="timeline.html">一覧</a>
+        <a href="music.html" aria-current="page">使用曲</a>
+      </nav>
+    </header>
+
+    <main class="page-shell">
+      <section class="page-intro">
+        <p class="eyebrow">MUSIC</p>
+        <h1>使用曲</h1>
+        <p>旅の動画に使った曲の一覧です。曲から旅をたどれます。</p>
+      </section>
+
+      <div id="music-groups"></div>
+      <p id="music-empty" class="empty-state" hidden>曲データを読み込めませんでした。</p>
+    </main>
+
+    <footer>Video Shelf · Personal Archive</footer>
+</body>
+</html>

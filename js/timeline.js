@@ -4,13 +4,11 @@ const summary = document.querySelector("#timeline-summary");
 const timeline = document.querySelector("#timeline");
 const emptyState = document.querySelector("#timeline-empty");
 const tagFilters = document.querySelector("#tag-filters");
-const artistFilters = document.querySelector("#artist-filters");
 const tagCarouselPrev = document.querySelector("#tag-carousel-prev");
 const tagCarouselNext = document.querySelector("#tag-carousel-next");
 
 let videos = [];
 const selectedTags = new Set();
-let selectedArtist = "すべて";
 
 function getTracks(video) {
   if (!video.music) return [];
@@ -31,25 +29,6 @@ function createTimelineCard(video) {
     }
   }
   return card;
-}
-
-function renderArtists() {
-  artistFilters.replaceChildren();
-  const artists = ["すべて", ...new Set(videos.flatMap((video) => getTracks(video).map((track) => track.artist).filter(Boolean)))];
-
-  artists.forEach((artist) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `tag-button${artist === selectedArtist ? " active" : ""}`;
-    button.textContent = artist;
-    button.setAttribute("aria-pressed", String(artist === selectedArtist));
-    button.addEventListener("click", () => {
-      selectedArtist = artist;
-      renderArtists();
-      renderTimeline();
-    });
-    artistFilters.append(button);
-  });
 }
 
 function renderTags() {
@@ -84,8 +63,6 @@ function renderTimeline() {
   const filtered = videos
     .filter((video) => selectedTags.size === 0
       || video.tags.some((tag) => selectedTags.has(tag)))
-    .filter((video) => selectedArtist === "すべて"
-      || getTracks(video).some((track) => track.artist === selectedArtist))
     .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 
   const grouped = new Map();
@@ -98,7 +75,6 @@ function renderTimeline() {
   const years = [...grouped.keys()].sort((a, b) => b - a);
   const conditions = [];
   if (selectedTags.size > 0) conditions.push([...selectedTags].join("・"));
-  if (selectedArtist !== "すべて") conditions.push(`${selectedArtist}の曲`);
   summary.textContent = conditions.length === 0
     ? `${filtered.length}本 / ${years.length}年`
     : `${conditions.join("・")}で ${filtered.length}本 / ${years.length}年`;
@@ -151,7 +127,6 @@ fetchVideos()
   .then((data) => {
     videos = data;
     renderTags();
-    renderArtists();
     renderTimeline();
   })
   .catch(() => {

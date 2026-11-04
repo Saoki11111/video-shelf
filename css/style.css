@@ -616,10 +616,6 @@ select {
   font-size: 12px;
 }
 
-.artist-filter-row {
-  margin-top: 0;
-}
-
 .empty-state {
   padding: 60px 24px;
   color: var(--muted);
@@ -826,6 +822,41 @@ footer {
   margin: 0;
   color: var(--muted);
   font-size: 13px;
+}
+
+.music-artist-name {
+  margin: 26px 0 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 17px;
+}
+
+.music-artist-name:first-child {
+  margin-top: 4px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.music-artist-name span {
+  margin-left: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.music-tracks {
+  display: grid;
+  gap: 9px;
+}
+
+.music-used {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.music-used a {
+  color: #bcd2f5;
 }
 
 .music-note {

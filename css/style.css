@@ -907,6 +907,34 @@ a.music-card:hover {
   z-index: 1;
 }
 
+#music-groups .music-used a {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+#music-groups .music-used a svg {
+  display: block;
+  width: 9px;
+  height: 9px;
+  fill: currentColor;
+  flex: none;
+}
+
+#music-groups .music-used a:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
 .music-card-link {
   position: absolute;
   inset: 0;

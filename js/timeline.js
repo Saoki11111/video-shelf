@@ -4,11 +4,53 @@ const summary = document.querySelector("#timeline-summary");
 const timeline = document.querySelector("#timeline");
 const emptyState = document.querySelector("#timeline-empty");
 const tagFilters = document.querySelector("#tag-filters");
+const artistFilters = document.querySelector("#artist-filters");
 const tagCarouselPrev = document.querySelector("#tag-carousel-prev");
 const tagCarouselNext = document.querySelector("#tag-carousel-next");
 
 let videos = [];
 const selectedTags = new Set();
+let selectedArtist = "すべて";
+
+function getTracks(video) {
+  if (!video.music) return [];
+  return Array.isArray(video.music) ? video.music : [video.music];
+}
+
+function createTimelineCard(video) {
+  const card = createCard(video);
+  const tracks = getTracks(video);
+  if (tracks.length) {
+    const body = card.querySelector(".card-body");
+    const date = card.querySelector(".card-date");
+    if (body) {
+      const music = document.createElement("p");
+      music.className = "card-music";
+      music.textContent = `♪ ${tracks.map((track) => `${track.title}／${track.artist}`).join("、")}`;
+      body.insertBefore(music, date);
+    }
+  }
+  return card;
+}
+
+function renderArtists() {
+  artistFilters.replaceChildren();
+  const artists = ["すべて", ...new Set(videos.flatMap((video) => getTracks(video).map((track) => track.artist).filter(Boolean)))];
+
+  artists.forEach((artist) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `tag-button${artist === selectedArtist ? " active" : ""}`;
+    button.textContent = artist;
+    button.setAttribute("aria-pressed", String(artist === selectedArtist));
+    button.addEventListener("click", () => {
+      selectedArtist = artist;
+      renderArtists();
+      renderTimeline();
+    });
+    artistFilters.append(button);
+  });
+}
 
 function renderTags() {
   tagFilters.replaceChildren();
@@ -42,6 +84,8 @@ function renderTimeline() {
   const filtered = videos
     .filter((video) => selectedTags.size === 0
       || video.tags.some((tag) => selectedTags.has(tag)))
+    .filter((video) => selectedArtist === "すべて"
+      || getTracks(video).some((track) => track.artist === selectedArtist))
     .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 
   const grouped = new Map();
@@ -52,9 +96,12 @@ function renderTimeline() {
   });
 
   const years = [...grouped.keys()].sort((a, b) => b - a);
-  summary.textContent = selectedTags.size === 0
+  const conditions = [];
+  if (selectedTags.size > 0) conditions.push([...selectedTags].join("・"));
+  if (selectedArtist !== "すべて") conditions.push(`${selectedArtist}の曲`);
+  summary.textContent = conditions.length === 0
     ? `${filtered.length}本 / ${years.length}年`
-    : `${[...selectedTags].join("・")}で ${filtered.length}本 / ${years.length}年`;
+    : `${conditions.join("・")}で ${filtered.length}本 / ${years.length}年`;
 
   if (filtered.length === 0) {
     emptyState.textContent = "該当する動画はありません。";
@@ -79,7 +126,7 @@ function renderTimeline() {
 
     const grid = document.createElement("div");
     grid.className = "video-grid timeline-grid";
-    grid.append(...grouped.get(year).map(createCard));
+    grid.append(...grouped.get(year).map(createTimelineCard));
 
     section.append(heading, grid);
     fragment.append(section);
@@ -104,6 +151,7 @@ fetchVideos()
   .then((data) => {
     videos = data;
     renderTags();
+    renderArtists();
     renderTimeline();
   })
   .catch(() => {

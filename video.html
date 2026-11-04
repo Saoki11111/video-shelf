@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="動画詳細">
-    <title>動画 | Video Log</title>
+    <title>動画 | Video Shelf</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/video.js" type="module"></script>
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="index.html">
-        <span class="brand-mark">VL</span>
-        <span>Video Log</span>
+        <span class="brand-mark">VS</span>
+        <span>Video Shelf</span>
       </a>
       <nav class="site-nav" aria-label="ページ">
         <a href="index.html">トップ</a>
@@ -35,6 +35,15 @@
             <p id="detail-description" class="detail-description"></p>
           </article>
         </div>
+        <section id="music-section" class="music-section" hidden aria-labelledby="music-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">MUSIC</p>
+              <h2 id="music-title">使用曲</h2>
+            </div>
+          </div>
+          <div id="music-list" class="music-list"></div>
+        </section>
         <section id="next-videos" class="next-videos" aria-labelledby="next-videos-title">
           <div class="section-heading">
             <div>
@@ -54,6 +63,6 @@
       <p id="error-state" class="empty-state" hidden>動画が見つかりません。</p>
     </main>
 
-    <footer>Video Log · Personal Archive</footer>
-  </body>
+    <footer>Video Shelf · Personal Archive</footer>
+  <!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "6cfa3c7ce52046038c2cdfa622bab6d0"}'></script><!-- Cloudflare Pages Analytics --></body>
 </html>

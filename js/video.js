@@ -7,6 +7,8 @@ const title = document.querySelector("#detail-title");
 const date = document.querySelector("#detail-date");
 const description = document.querySelector("#detail-description");
 const tags = document.querySelector("#detail-tags");
+const musicSection = document.querySelector("#music-section");
+const musicList = document.querySelector("#music-list");
 const nextVideos = document.querySelector("#next-videos");
 const nextVideosGrid = document.querySelector("#next-videos-grid");
 const nextVideosPrev = document.querySelector("#next-videos-prev");
@@ -88,7 +90,7 @@ nextVideosGrid.addEventListener("click", (event) => {
 });
 
 function renderVideo(video, videos) {
-  document.title = `${video.title} | Video Log`;
+  document.title = `${video.title} | Video Shelf`;
   title.textContent = video.title;
   date.textContent = new Intl.DateTimeFormat("ja-JP", {
     year: "numeric",
@@ -116,6 +118,45 @@ function renderVideo(video, videos) {
     unavailable.className = "player-unavailable";
     unavailable.textContent = "この動画は再生準備中です。";
     player.append(unavailable);
+  }
+
+  const tracks = video.music ? (Array.isArray(video.music) ? video.music : [video.music]) : [];
+  if (musicSection && musicList && tracks.length) {
+    tracks.forEach((track) => {
+      const card = document.createElement("div");
+      card.className = "music-card";
+      if (track.thumbnail) {
+        const thumb = document.createElement("img");
+        thumb.className = "music-thumbnail";
+        thumb.src = track.thumbnail;
+        thumb.alt = "";
+        thumb.width = 76;
+        thumb.height = 76;
+        thumb.loading = "lazy";
+        card.append(thumb);
+      }
+      const info = document.createElement("div");
+      info.className = "music-info";
+      const name = document.createElement("p");
+      name.className = "music-name";
+      name.textContent = track.title ?? "";
+      const artist = document.createElement("p");
+      artist.className = "music-artist";
+      artist.textContent = track.artist ?? "";
+      info.append(name, artist);
+      card.append(info);
+      if (track.url) {
+        const link = document.createElement("a");
+        link.className = "music-link";
+        link.href = track.url;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = "聴く ↗";
+        card.append(link);
+      }
+      musicList.append(card);
+    });
+    musicSection.hidden = false;
   }
 
   if (nextVideosGrid) {

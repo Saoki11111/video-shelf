@@ -11,7 +11,13 @@
     "thumbnail": "images/thumbnails/202609-sapporo.jpg",
     "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202609-sapporo.mp4",
     "driveFileId": "1Kzgex9Oz3iT1EKuI35HeGUO4gud1oCdn",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "music": {
+      "title": "Keep Walking",
+      "artist": "羊文学",
+      "thumbnail": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/9c/ab/df/9cabdfa3-2e79-769d-94a5-20228bc09260/4547366841572.jpg/600x600bb.jpg",
+      "url": "https://music.apple.com/jp/album/keep-walking/6794211072?i=6794211073&uo=4"
+    }
   },
   {
     "id": "202605-indonesia",
@@ -38,7 +44,13 @@
     "thumbnail": "images/thumbnails/202603-hongkong.jpg",
     "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202603-hongkong.mp4",
     "driveFileId": "197C3d9uYS7RJkUu8ixKGXVUiUbv_pIaA",
-    "sortOrder": 3
+    "sortOrder": 3,
+    "music": {
+      "title": "Blind Spot",
+      "artist": "W-AI",
+      "thumbnail": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/f6/55/07/f6550700-3b1e-2efa-d03d-216d136c2981/7330178060067.png/600x600bb.jpg",
+      "url": "https://music.apple.com/jp/album/blind-spot/1562623643?i=1562623646&uo=4"
+    }
   },
   {
     "id": "202601-ishigaki",
@@ -51,7 +63,13 @@
     "thumbnail": "images/thumbnails/202601-ishigaki.jpg",
     "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202601-ishigaki.mp4",
     "driveFileId": "1oZDhW26dYx6df7VccstaTCATk55V9dx_",
-    "sortOrder": 4
+    "sortOrder": 4,
+    "music": {
+      "title": "99 Steps",
+      "artist": "STUTS",
+      "thumbnail": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/e7/be/39/e7be393f-238e-32ba-3abf-421bc99d4311/4580789707360.png/600x600bb.jpg",
+      "url": "https://music.apple.com/jp/album/99-steps-feat-kohjiya-hana-hope/1807914002?i=1807914003&uo=4"
+    }
   },
   {
     "id": "202502-thai",
@@ -65,7 +83,13 @@
     "thumbnail": "images/thumbnails/202502-thai.webp",
     "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202502-thai.mp4",
     "driveFileId": "1DXIqE6MZqkAr_sQqI1UOBJ5oy51kHSZE",
-    "sortOrder": 5
+    "sortOrder": 5,
+    "music": {
+      "title": "火星人",
+      "artist": "ヨルシカ",
+      "thumbnail": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/3d/d3/6f/3dd36fd9-0da0-5fbc-2ef1-8cd91bc7fdf0/25UMGIM44240.rgb.jpg/600x600bb.jpg",
+      "url": "https://music.apple.com/jp/album/%E7%81%AB%E6%98%9F%E4%BA%BA/1809266694?i=1809266711&uo=4"
+    }
   },
   {
     "id": "202511-manila",
@@ -79,7 +103,13 @@
     "thumbnail": "images/thumbnails/202511-manila.jpg",
     "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202511-manila.mp4",
     "driveFileId": "1k5oMCvCJ1r_MVL46jq44OzLXWeoVLCCf",
-    "sortOrder": 7
+    "sortOrder": 7,
+    "music": {
+      "title": "いらない",
+      "artist": "サカナクション",
+      "thumbnail": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/21/d0/8f/21d08f38-bfd6-415e-7de3-f2fb48495522/VEATP-45215.jpg/600x600bb.jpg",
+      "url": "https://music.apple.com/jp/album/%E3%81%84%E3%82%89%E3%81%AA%E3%81%84/1874114091?i=1874114093&uo=4"
+    }
   },
   {
     "id": "202509-shanghai",
@@ -92,6 +122,12 @@
     "thumbnail": "images/thumbnails/202509-shanghai.jpg",
     "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202509-shanghai.mp4",
     "driveFileId": "1dehntG7YRjLoi7LqtGLfNoUYQ6BhTqKO",
-    "sortOrder": 6
+    "sortOrder": 6,
+    "music": {
+      "title": "茜",
+      "artist": "ヨルシカ",
+      "thumbnail": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/28/7d/d2/287dd29e-cffa-ea42-79ce-ceeb764b70ac/25UM2IM05371.rgb.jpg/600x600bb.jpg",
+      "url": "https://music.apple.com/jp/album/%E8%8C%9C/1869557597?i=1869557604&uo=4"
+    }
   }
 ]

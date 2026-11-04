@@ -31,7 +31,13 @@
     "thumbnail": "images/thumbnails/202605-indonesia.webp",
     "videoUrl": "https://pub-d27b649f7b1c46b4a4e032fec7c6d6e5.r2.dev/videos/202605-indonesia.mp4",
     "driveFileId": "1SoUqWmr_tpAKvOZLVbeWCMMZGQoM5Rwc",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "music": {
+      "title": "Togetherness",
+      "artist": "Fassounds",
+      "thumbnail": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/5a/26/eb/5a26ebcb-447f-055d-d7bb-83282540a804/artwork.jpg/600x600bb.jpg",
+      "url": "https://music.apple.com/jp/album/togetherness/1750678294?i=1750678295&uo=4"
+    }
   },
   {
     "id": "202603-hongkong",

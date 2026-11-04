@@ -194,18 +194,13 @@ select {
 
 .hero h1 {
   max-width: 650px;
-  height: 2.4em;
-  overflow: hidden;
+  min-height: 2.7em;
   margin: 10px 0 18px;
   font-family: inherit;
   font-size: clamp(24px, 3.4vw, 39px);
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.35;
   letter-spacing: -0.03em;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
 }
 
 .hero-content > p:not(.eyebrow) {
@@ -215,10 +210,14 @@ select {
   color: rgba(255, 255, 255, 0.75);
 }
 
+#hero-description span {
+  display: block;
+}
+
 .carousel-arrow {
   position: absolute;
   z-index: 5;
-  top: 50%;
+  bottom: 22px;
   display: grid;
   width: 46px;
   height: 46px;
@@ -228,28 +227,27 @@ select {
   cursor: pointer;
   background: rgba(0,0,0,.28);
   place-items: center;
-  transform: translateY(-50%);
   transition: background 150ms ease, transform 150ms ease;
 }
 
 .carousel-arrow:hover {
   background: rgba(255,255,255,.2);
-  transform: translateY(-50%) scale(1.06);
+  transform: scale(1.06);
 }
 
 .carousel-prev {
-  left: 16px;
+  right: calc(max(24px, calc((100vw - 1120px) / 2)) + 58px);
 }
 
 .carousel-next {
-  right: 16px;
+  right: max(24px, calc((100vw - 1120px) / 2));
 }
 
 .carousel-dots {
   position: absolute;
   z-index: 5;
-  right: max(24px, calc((100vw - 1120px) / 2));
-  bottom: 28px;
+  left: max(24px, calc((100vw - 1120px) / 2));
+  bottom: 34px;
   display: flex;
   gap: 8px;
 }
@@ -393,13 +391,19 @@ select {
 }
 
 .section-link {
-  color: var(--muted);
-  font-size: 13px;
-  transition: color 150ms ease;
+  flex: none;
+  padding: 11px 18px;
+  color: var(--paper);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  border-radius: 999px;
+  background: var(--ink);
+  transition: opacity 150ms ease;
 }
 
 .section-link:hover {
-  color: var(--ink);
+  opacity: 0.85;
 }
 
 .shelf-navigation {
@@ -762,6 +766,69 @@ footer {
   letter-spacing: 0.08em;
 }
 
+.shelf-note {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.music-section {
+  padding-top: 48px;
+}
+
+.music-section .section-heading {
+  margin-bottom: 20px;
+}
+
+.music-list {
+  display: grid;
+  gap: 12px;
+}
+
+.music-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.music-thumbnail {
+  flex: none;
+  width: 76px;
+  height: 76px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.music-info {
+  min-width: 0;
+}
+
+.music-name {
+  margin: 0;
+  font-weight: 700;
+}
+
+.music-artist {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.music-link {
+  flex: none;
+  margin-left: auto;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
 @media (max-width: 780px) {
   .hero {
     min-height: 280px;
@@ -778,14 +845,24 @@ footer {
   .carousel-arrow {
     width: 36px;
     height: 36px;
+    bottom: 14px;
   }
 
   .carousel-prev {
-    left: 8px;
+    right: 56px;
   }
 
   .carousel-next {
-    right: 8px;
+    right: 12px;
+  }
+
+  .carousel-dots {
+    left: 18px;
+    bottom: 24px;
+  }
+
+  .hero-content {
+    padding-bottom: 40px;
   }
 
   .video-grid {

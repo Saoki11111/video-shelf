@@ -894,56 +894,56 @@ a.music-card:hover {
 }
 
 #music-groups .music-card {
-  cursor: pointer;
-  transition: background 150ms ease;
-}
-
-#music-groups .music-card:hover {
-  background: #152a52;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
 }
 
 #music-groups .music-link {
-  position: relative;
-  z-index: 1;
+  flex: 1;
+  justify-content: center;
+  height: 38px;
+  padding: 0 13px;
+  border-radius: 10px;
 }
 
-#music-groups .music-used a {
-  position: relative;
-  z-index: 1;
+.music-card-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.music-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.music-video-btn {
+  flex: 1;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 11px;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
   color: var(--ink);
-  font-size: 11.5px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
 }
 
-#music-groups .music-used a svg {
+.music-video-btn svg {
   display: block;
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   fill: currentColor;
   flex: none;
 }
 
-#music-groups .music-used a:hover {
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.music-card-link {
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-}
-
-.music-card-link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.music-video-btn:hover {
+  background: rgba(255, 255, 255, 0.13);
 }
 
 .pick-stage {

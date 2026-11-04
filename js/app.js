@@ -278,7 +278,7 @@ function renderMusicPick() {
   const pageLink = document.createElement("a");
   pageLink.className = "section-link";
   pageLink.href = "music.html";
-  pageLink.textContent = "使用曲ページ →";
+  pageLink.textContent = "使用曲一覧 →";
   heading.append(headingText, pageLink);
 
   const stage = document.createElement("div");

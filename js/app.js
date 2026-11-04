@@ -278,11 +278,11 @@ function renderCategories() {
     const prev = document.createElement("button");
     prev.type = "button";
     prev.setAttribute("aria-label", `${category.title}の前の動画`);
-    prev.textContent = "‹";
+    prev.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     const next = document.createElement("button");
     next.type = "button";
     next.setAttribute("aria-label", `${category.title}の次の動画`);
-    next.textContent = "›";
+    next.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     navigation.append(prev, next);
 
     const rotator = createRowRotator(grid);

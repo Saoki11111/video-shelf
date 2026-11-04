@@ -48,7 +48,7 @@ function createTrackRow(video, track) {
   const videoLink = document.createElement("a");
   videoLink.href = `video.html?id=${encodeURIComponent(video.id)}`;
   videoLink.textContent = video.title;
-  used.append(videoLink);
+  used.append(videoLink, " →");
   info.append(used);
 
   card.append(info);
@@ -63,6 +63,12 @@ function createTrackRow(video, track) {
     link.setAttribute("aria-label", `${track.title} を Apple Music で聴く`);
     card.append(link);
   }
+
+  const cardLink = document.createElement("a");
+  cardLink.className = "music-card-link";
+  cardLink.href = `video.html?id=${encodeURIComponent(video.id)}`;
+  cardLink.setAttribute("aria-label", `${video.title} を見る`);
+  card.append(cardLink);
 
   return card;
 }

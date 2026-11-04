@@ -144,6 +144,12 @@ function renderVideo(video, videos) {
       artist.className = "music-artist";
       artist.textContent = track.artist ?? "";
       info.append(name, artist);
+      if (track.note) {
+        const note = document.createElement("p");
+        note.className = "music-note";
+        note.textContent = track.note;
+        info.append(note);
+      }
       card.append(info);
       if (track.url) {
         const link = document.createElement("a");

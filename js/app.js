@@ -13,12 +13,6 @@ const carouselDots = document.querySelector("#carousel-dots");
 const newVideosPrev = document.querySelector("#new-videos-prev");
 const newVideosNext = document.querySelector("#new-videos-next");
 
-const CATEGORIES = [
-  { eyebrow: "CATEGORY 01 — TIME", title: "ゆっくり流れる時間", note: "急がない旅。海と牧場と、島の速度", ids: ["202601-ishigaki", "202609-sapporo", "202502-thai", "202605-indonesia"] },
-  { eyebrow: "CATEGORY 02 — BLUE", title: "青い景色", note: "空と海と港。青が主役の旅", ids: ["202609-sapporo", "202601-ishigaki", "202603-hongkong"] },
-  { eyebrow: "CATEGORY 03 — LANDMARK", title: "街のシンボルを訪ねて", note: "その街の「顔」が映っているもの", ids: ["202609-sapporo", "202502-thai", "202509-shanghai"] },
-];
-
 function setTitleLines(element, title) {
   const parts = title.split("、");
   const nodes = [];
@@ -240,59 +234,142 @@ function renderTopSections() {
   newVideosGrid.replaceChildren(...newest.map(createCard));
 }
 
-function renderCategories() {
+const CHEVRON_LEFT = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CHEVRON_RIGHT = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function getTracks(video) {
+  if (!video.music) return [];
+  return Array.isArray(video.music) ? video.music : [video.music];
+}
+
+function renderMusicPick() {
   const wrap = document.querySelector(".top-sections");
   if (!wrap) return;
-  const byId = new Map(videos.map((video) => [video.id, video]));
 
-  CATEGORIES.forEach((category) => {
-    const items = category.ids.map((id) => byId.get(id)).filter(Boolean);
-    if (!items.length) return;
-
-    const section = document.createElement("section");
-    section.className = "shelf";
-    section.setAttribute("aria-label", category.title);
-
-    const heading = document.createElement("div");
-    heading.className = "section-heading";
-    const headingText = document.createElement("div");
-    const eyebrow = document.createElement("p");
-    eyebrow.className = "eyebrow";
-    eyebrow.textContent = category.eyebrow;
-    const title = document.createElement("h2");
-    title.textContent = category.title;
-    const note = document.createElement("p");
-    note.className = "shelf-note";
-    note.textContent = category.note;
-    headingText.append(eyebrow, title, note);
-    heading.append(headingText);
-
-    const carousel = document.createElement("div");
-    carousel.className = "shelf-carousel";
-    const grid = document.createElement("div");
-    grid.className = "video-grid category-grid shelf-grid";
-    grid.append(...items.map(createCard));
-
-    const navigation = document.createElement("div");
-    navigation.className = "shelf-navigation";
-    const prev = document.createElement("button");
-    prev.type = "button";
-    prev.setAttribute("aria-label", `${category.title}の前の動画`);
-    prev.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    const next = document.createElement("button");
-    next.type = "button";
-    next.setAttribute("aria-label", `${category.title}の次の動画`);
-    next.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    navigation.append(prev, next);
-
-    const rotator = createRowRotator(grid);
-    prev.addEventListener("click", () => rotator.rotate(-1));
-    next.addEventListener("click", () => rotator.rotate(1));
-
-    carousel.append(grid, navigation);
-    section.append(heading, carousel);
-    wrap.append(section);
+  const entries = [];
+  videos.forEach((video) => {
+    getTracks(video).forEach((track) => entries.push({ video, track }));
   });
+  if (!entries.length) return;
+
+  const shuffled = [...entries];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  const selected = shuffled.slice(0, 3);
+
+  const section = document.createElement("section");
+  section.className = "shelf";
+  section.setAttribute("aria-label", "Sound & Movie");
+
+  const heading = document.createElement("div");
+  heading.className = "section-heading";
+  const headingText = document.createElement("div");
+  const eyebrow = document.createElement("p");
+  eyebrow.className = "eyebrow";
+  eyebrow.textContent = "MUSIC CHOICE";
+  const title = document.createElement("h2");
+  title.textContent = "Sound & Movie";
+  const note = document.createElement("p");
+  note.className = "shelf-note";
+  note.textContent = "開くたびにランダムで3曲";
+  headingText.append(eyebrow, title, note);
+  const pageLink = document.createElement("a");
+  pageLink.className = "section-link";
+  pageLink.href = "music.html";
+  pageLink.textContent = "使用曲ページ →";
+  heading.append(headingText, pageLink);
+
+  const stage = document.createElement("div");
+  stage.className = "pick-stage";
+  const cardLink = document.createElement("a");
+  cardLink.className = "pick-card";
+  stage.append(cardLink);
+
+  const nav = document.createElement("div");
+  nav.className = "pick-nav";
+  const dots = document.createElement("div");
+  dots.className = "pick-dots";
+  const count = document.createElement("span");
+  count.className = "pick-count";
+  const arrows = document.createElement("div");
+  arrows.className = "pick-arrows";
+  const prev = document.createElement("button");
+  prev.type = "button";
+  prev.setAttribute("aria-label", "前の曲");
+  prev.innerHTML = CHEVRON_LEFT;
+  const next = document.createElement("button");
+  next.type = "button";
+  next.setAttribute("aria-label", "次の曲");
+  next.innerHTML = CHEVRON_RIGHT;
+  arrows.append(prev, next);
+  nav.append(dots, count, arrows);
+  stage.append(nav);
+
+  let index = 0;
+  function show(nextIndex) {
+    index = ((nextIndex % selected.length) + selected.length) % selected.length;
+    const { video, track } = selected[index];
+    cardLink.href = `video.html?id=${encodeURIComponent(video.id)}`;
+    cardLink.setAttribute("aria-label", `${track.title}が使われている動画「${video.title}」を見る`);
+    cardLink.replaceChildren();
+
+    if (track.thumbnail) {
+      const backdrop = document.createElement("img");
+      backdrop.className = "pick-backdrop";
+      backdrop.src = track.thumbnail;
+      backdrop.alt = "";
+      backdrop.setAttribute("aria-hidden", "true");
+      const jacket = document.createElement("img");
+      jacket.className = "pick-jacket";
+      jacket.src = track.thumbnail;
+      jacket.alt = "";
+      jacket.loading = "lazy";
+      cardLink.append(backdrop, jacket);
+    }
+
+    const info = document.createElement("div");
+    info.className = "pick-info";
+    const song = document.createElement("p");
+    song.className = "pick-song";
+    song.textContent = `♪ ${track.title ?? ""}`;
+    const artist = document.createElement("p");
+    artist.className = "pick-artist";
+    artist.textContent = track.artist ?? "";
+    info.append(song, artist);
+    if (track.note) {
+      const noteEl = document.createElement("p");
+      noteEl.className = "pick-note";
+      noteEl.textContent = track.note;
+      info.append(noteEl);
+    }
+    const used = document.createElement("p");
+    used.className = "pick-video";
+    used.textContent = `使用動画：${video.title}`;
+    info.append(used);
+    cardLink.append(info);
+
+    cardLink.classList.remove("pick-fade");
+    void cardLink.offsetWidth;
+    cardLink.classList.add("pick-fade");
+
+    dots.replaceChildren(...selected.map((_, i) => {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      if (i === index) dot.className = "on";
+      dot.setAttribute("aria-label", `${i + 1}曲目を表示`);
+      dot.addEventListener("click", () => show(i));
+      return dot;
+    }));
+    count.textContent = `${index + 1} / ${selected.length}`;
+  }
+  prev.addEventListener("click", () => show(index - 1));
+  next.addEventListener("click", () => show(index + 1));
+  show(0);
+
+  section.append(heading, stage);
+  wrap.append(section);
 }
 
 const newVideosRotator = createRowRotator(newVideosGrid);
@@ -304,7 +381,7 @@ fetchVideos()
     videos = data;
     initializeCarousel();
     renderTopSections();
-    renderCategories();
+    renderMusicPick();
   })
   .catch(() => {
     heroDescription.textContent = "動画データを読み込めませんでした。";

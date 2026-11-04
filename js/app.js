@@ -13,6 +13,37 @@ const carouselDots = document.querySelector("#carousel-dots");
 const newVideosPrev = document.querySelector("#new-videos-prev");
 const newVideosNext = document.querySelector("#new-videos-next");
 
+const CATEGORIES = [
+  { eyebrow: "CATEGORY 01 — SOUND", title: "街の音が残る旅", note: "喧騒、エンジン、街角のざわめきが主役のもの", ids: ["202603-hongkong", "202511-manila", "202509-shanghai", "202605-indonesia"] },
+  { eyebrow: "CATEGORY 02 — TIME", title: "ゆっくり流れる時間", note: "急がない旅。海と牧場と、島の速度", ids: ["202601-ishigaki", "202609-sapporo", "202502-thai", "202605-indonesia"] },
+  { eyebrow: "CATEGORY 03 — LIGHT", title: "夕暮れと夜の光", note: "一日の終わりの色が残るもの", ids: ["202502-thai", "202603-hongkong", "202609-sapporo", "202509-shanghai"] },
+  { eyebrow: "CATEGORY 04 — RIDE", title: "乗り物から見る景色", note: "移動そのものが思い出になっている旅", ids: ["202511-manila", "202603-hongkong", "202605-indonesia"] },
+  { eyebrow: "CATEGORY 05 — FOOD", title: "市場と食の記憶", note: "その土地の味と匂いが残るもの", ids: ["202502-thai", "202511-manila", "202605-indonesia", "202609-sapporo"] },
+  { eyebrow: "CATEGORY 06 — BLUE", title: "青い景色", note: "空と海と港。青が主役の旅", ids: ["202609-sapporo", "202601-ishigaki", "202603-hongkong"] },
+  { eyebrow: "CATEGORY 07 — LANDMARK", title: "街のシンボルを訪ねて", note: "その街の「顔」が映っているもの", ids: ["202609-sapporo", "202502-thai", "202509-shanghai"] },
+  { eyebrow: "CATEGORY 08 — SOUTHEAST ASIA", title: "東南アジアの旅", note: "この棚の中心地帯。熱気と市場の3本", ids: ["202605-indonesia", "202502-thai", "202511-manila"] },
+  { eyebrow: "CATEGORY 09 — ARCHIVE 2026", title: "2026年の旅", note: "年ごとに増えていくアーカイブ棚", ids: ["202609-sapporo", "202605-indonesia", "202603-hongkong", "202601-ishigaki"] },
+];
+
+function setTitleLines(element, title) {
+  const parts = title.split("、");
+  const nodes = [];
+  parts.forEach((part, index) => {
+    if (index > 0) nodes.push(document.createElement("br"));
+    nodes.push(document.createTextNode(index < parts.length - 1 ? `${part}、` : part));
+  });
+  element.replaceChildren(...nodes);
+}
+
+function setSentenceLines(element, description) {
+  const sentences = description.split("。").map((s) => s.trim()).filter(Boolean);
+  element.replaceChildren(...sentences.map((sentence) => {
+    const line = document.createElement("span");
+    line.textContent = `${sentence}。`;
+    return line;
+  }));
+}
+
 let videos = [];
 let featuredVideos = [];
 let activeSlide = 0;
@@ -33,8 +64,8 @@ function renderCarousel() {
   heroCarousel.classList.add(`slide-${activeSlide}`);
   heroCarousel.setAttribute("aria-label", `ピックアップ動画 ${activeSlide + 1}/${featuredVideos.length}`);
   heroEyebrow.textContent = `PICKUP · ${video.tags[0].toUpperCase()}`;
-  heroTitle.textContent = video.title;
-  heroDescription.textContent = video.description;
+  setTitleLines(heroTitle, video.title);
+  setSentenceLines(heroDescription, video.description);
   heroNumber.textContent = String(activeSlide + 1).padStart(2, "0");
   heroThumbnail.src = video.thumbnail;
 
@@ -166,6 +197,42 @@ function renderTopSections() {
   newVideosGrid.replaceChildren(...newest.map(createCard));
 }
 
+function renderCategories() {
+  const wrap = document.querySelector(".top-sections");
+  if (!wrap) return;
+  const byId = new Map(videos.map((video) => [video.id, video]));
+
+  CATEGORIES.forEach((category) => {
+    const items = category.ids.map((id) => byId.get(id)).filter(Boolean);
+    if (!items.length) return;
+
+    const section = document.createElement("section");
+    section.className = "shelf";
+    section.setAttribute("aria-label", category.title);
+
+    const heading = document.createElement("div");
+    heading.className = "section-heading";
+    const headingText = document.createElement("div");
+    const eyebrow = document.createElement("p");
+    eyebrow.className = "eyebrow";
+    eyebrow.textContent = category.eyebrow;
+    const title = document.createElement("h2");
+    title.textContent = category.title;
+    const note = document.createElement("p");
+    note.className = "shelf-note";
+    note.textContent = category.note;
+    headingText.append(eyebrow, title, note);
+    heading.append(headingText);
+
+    const grid = document.createElement("div");
+    grid.className = "video-grid category-grid";
+    grid.append(...items.map(createCard));
+
+    section.append(heading, grid);
+    wrap.append(section);
+  });
+}
+
 newVideosPrev.addEventListener("click", () => rotateNewVideos(-1));
 newVideosNext.addEventListener("click", () => rotateNewVideos(1));
 newVideosGrid.addEventListener("touchstart", (event) => {
@@ -196,6 +263,7 @@ fetchVideos()
     videos = data;
     initializeCarousel();
     renderTopSections();
+    renderCategories();
   })
   .catch(() => {
     heroDescription.textContent = "動画データを読み込めませんでした。";

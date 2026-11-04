@@ -47,8 +47,9 @@ function createTrackRow(video, track) {
   used.append("使用動画：");
   const videoLink = document.createElement("a");
   videoLink.href = `video.html?id=${encodeURIComponent(video.id)}`;
-  videoLink.textContent = video.title;
-  used.append(videoLink, " →");
+  videoLink.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13l11-6.5z"/></svg>';
+  videoLink.append(video.title);
+  used.append(videoLink);
   info.append(used);
 
   card.append(info);

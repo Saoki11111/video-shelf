@@ -273,12 +273,12 @@ function renderMusicPick() {
   title.textContent = "Sound & Movie";
   const note = document.createElement("p");
   note.className = "shelf-note";
-  note.textContent = "開くたびにランダムで3曲";
+  note.textContent = "聞いてほしい曲、動画を彩る音楽たち";
   headingText.append(eyebrow, title, note);
   const pageLink = document.createElement("a");
   pageLink.className = "section-link";
   pageLink.href = "music.html";
-  pageLink.textContent = "使用曲ページ →";
+  pageLink.textContent = "使用曲一覧 →";
   heading.append(headingText, pageLink);
 
   const stage = document.createElement("div");
@@ -366,6 +366,31 @@ function renderMusicPick() {
   }
   prev.addEventListener("click", () => show(index - 1));
   next.addEventListener("click", () => show(index + 1));
+
+  let pickTouchX = 0;
+  let pickTouchY = 0;
+  let suppressPickClick = false;
+  cardLink.addEventListener("touchstart", (event) => {
+    const touch = event.changedTouches[0];
+    pickTouchX = touch.clientX;
+    pickTouchY = touch.clientY;
+  }, { passive: true });
+  cardLink.addEventListener("touchend", (event) => {
+    const touch = event.changedTouches[0];
+    const distanceX = touch.clientX - pickTouchX;
+    const distanceY = touch.clientY - pickTouchY;
+    if (Math.abs(distanceX) >= 50 && Math.abs(distanceX) > Math.abs(distanceY)) {
+      suppressPickClick = true;
+      show(index + (distanceX < 0 ? 1 : -1));
+    }
+  }, { passive: true });
+  cardLink.addEventListener("click", (event) => {
+    if (suppressPickClick) {
+      suppressPickClick = false;
+      event.preventDefault();
+    }
+  });
+
   show(0);
 
   section.append(heading, stage);

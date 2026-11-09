@@ -300,8 +300,12 @@ select {
   align-items: center;
   gap: 8px;
   width: min(880px, calc(100% - 40px));
-  margin: 30px auto 6px;
+  margin: 26px auto 0;
+  padding: 24px 22px;
   text-align: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
 }
 
 .site-concept p {
@@ -1759,3 +1763,8 @@ a.music-card:hover {
 
 /* ===== 地図パネルの見出し行（右に一覧ボタン） ===== */
 .map-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+
+/* ===== About（サイト説明）はカードとして装飾を分ける ===== */
+@media (min-width: 781px) {
+  .site-concept { margin-top: 36px; padding: 30px 22px; }
+}

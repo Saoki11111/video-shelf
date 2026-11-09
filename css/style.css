@@ -1731,3 +1731,19 @@ a.music-card:hover {
   .pick-song { font-size: 21px; }
   .music-actions { max-width: 540px; }
 }
+
+/* ===== 詳細ページ：動画の詳細アコーディオン ===== */
+.detail-accordion { margin-top: 22px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); }
+.detail-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 15px 18px; border: 0; background: none; color: var(--ink); font: inherit; font-size: 14.5px; font-weight: 800; cursor: pointer; }
+.detail-chevron { width: 18px; height: 18px; color: var(--muted); transition: transform 0.25s ease; }
+.detail-toggle.open .detail-chevron { transform: rotate(180deg); }
+.detail-panel { border-top: 1px solid var(--line); padding: 16px 18px 20px; }
+.detail-panel .music-section { padding: 26px 0 0; }
+
+@media (max-width: 780px) {
+  .detail-accordion { margin: 18px 20px 0; }
+}
+
+@media (min-width: 781px) {
+  .detail-accordion { max-width: 880px; margin-left: auto; margin-right: auto; }
+}

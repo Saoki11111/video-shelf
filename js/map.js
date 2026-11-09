@@ -9,36 +9,19 @@ const PLACES = [
   { name: "バンコク", area: "タイ", lat: 13.76, lon: 100.50, id: "202502-thai", thumb: "images/thumbnails/202502-thai.webp", title: "タイ、夕暮れの市場を歩く" },
   { name: "ジャカルタ", area: "インドネシア", lat: -6.21, lon: 106.85, id: "202605-indonesia", thumb: "images/thumbnails/202605-indonesia.webp", title: "インドネシア、予定外から始まる旅" },
 ];
-const LON0 = 62, LON1 = 156, LAT1 = 54, LAT0 = -14, MAX_SCALE = 3.2;
+const LON0 = 62, LON1 = 156, LAT1 = 54, LAT0 = -14;
 const canvas = document.querySelector("#travel-map-canvas");
 const pinLayer = document.querySelector("#pin-layer");
 const card = document.querySelector("#map-card");
 const cardThumb = document.querySelector("#map-card-thumb");
 const cardTitle = document.querySelector("#map-card-title");
 const cardLink = document.querySelector("#map-card-link");
-const resetButton = document.querySelector("#map-reset");
 const ctx = canvas.getContext("2d");
-let W = 0, H = 0, scale = 1, tx = 0, ty = 0;
+let W = 0, H = 0;
 let currentPlace = null;
 
-const baseProject = (lat, lon) => ({ x: ((lon - LON0) / (LON1 - LON0)) * W, y: ((LAT1 - lat) / (LAT1 - LAT0)) * H });
-const project = (lat, lon) => { const p = baseProject(lat, lon); return { x: p.x * scale + tx, y: p.y * scale + ty }; };
+const project = (lat, lon) => ({ x: ((lon - LON0) / (LON1 - LON0)) * W, y: ((LAT1 - lat) / (LAT1 - LAT0)) * H });
 
-function clampTransform() {
-  scale = Math.min(MAX_SCALE, Math.max(1, scale));
-  tx = Math.min(0, Math.max(W - W * scale, tx));
-  ty = Math.min(0, Math.max(H - H * scale, ty));
-  if (scale === 1) { tx = 0; ty = 0; }
-  canvas.style.touchAction = scale > 1.05 ? "none" : "pan-y";
-  resetButton.hidden = scale <= 1.05;
-}
-function resetView() { scale = 1; tx = 0; ty = 0; clampTransform(); }
-function zoomAt(cx, cy, factor) {
-  const next = Math.min(MAX_SCALE, Math.max(1, scale * factor));
-  const ratio = next / scale;
-  tx = cx - (cx - tx) * ratio; ty = cy - (cy - ty) * ratio; scale = next;
-  clampTransform();
-}
 function resize() {
   const rect = canvas.getBoundingClientRect();
   if (!rect.width) return;
@@ -46,7 +29,6 @@ function resize() {
   canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   W = rect.width; H = rect.height;
-  clampTransform();
 }
 
 // ピン＝本物のボタン
@@ -68,21 +50,17 @@ function draw() {
   if (!W) { resize(); return; }
   ctx.fillStyle = "#0d1830"; ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = "rgba(159,196,255,.85)";
-  const dotR = Math.max(1, 1.5 * Math.min(scale, 1.7));
   for (let i = 0; i < MAP_DOTS.length; i += 2) {
     const p = project(MAP_DOTS[i + 1] / 10, MAP_DOTS[i] / 10);
     if (p.x < -4 || p.y < -4 || p.x > W + 4 || p.y > H + 4) continue;
-    ctx.beginPath(); ctx.arc(p.x, p.y, dotR, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, 7); ctx.fill();
   }
   for (const { place, el } of pinEls) {
     const p = project(place.lat, place.lon);
-    const off = p.x < -30 || p.y < -30 || p.x > W + 30 || p.y > H + 30;
-    el.style.display = off ? "none" : "block";
-    if (!off) el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%,-50%)`;
+    el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%,-50%)`;
     el.classList.toggle("on", currentPlace === place);
   }
 }
-
 
 function openPlace(place) {
   currentPlace = place;
@@ -92,51 +70,7 @@ function openPlace(place) {
   card.hidden = false;
 }
 
-// パン・ピンチ・ホイール・ダブルタップ
-const pointers = new Map();
-let downX = 0, downY = 0, moved = false, pinchDist = 0, lastTapAt = 0;
-canvas.addEventListener("pointerdown", (e) => {
-  canvas.setPointerCapture(e.pointerId);
-  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-  if (pointers.size === 1) { downX = e.clientX; downY = e.clientY; moved = false; }
-  if (pointers.size === 2) { const [a, b] = [...pointers.values()]; pinchDist = Math.hypot(a.x - b.x, a.y - b.y); moved = true; }
-});
-canvas.addEventListener("pointermove", (e) => {
-  if (!pointers.has(e.pointerId)) return;
-  const prev = pointers.get(e.pointerId);
-  const dx = e.clientX - prev.x, dy = e.clientY - prev.y;
-  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-  if (Math.hypot(e.clientX - downX, e.clientY - downY) > 7) moved = true;
-  if (pointers.size === 2) {
-    const [a, b] = [...pointers.values()];
-    const dist = Math.hypot(a.x - b.x, a.y - b.y);
-    const rect = canvas.getBoundingClientRect();
-    if (pinchDist > 0) zoomAt((a.x + b.x) / 2 - rect.left, (a.y + b.y) / 2 - rect.top, dist / pinchDist);
-    pinchDist = dist;
-  } else if (pointers.size === 1 && moved && scale > 1) {
-    tx += dx; ty += dy; clampTransform();
-  }
-});
-canvas.addEventListener("pointerup", () => {
-  pointers.clear(); pinchDist = 0;
-  if (!moved && scale > 1) {
-    const now = Date.now();
-    if (now - lastTapAt < 320) { resetView(); lastTapAt = 0; } else lastTapAt = now;
-  }
-});
-canvas.addEventListener("pointercancel", () => { pointers.clear(); pinchDist = 0; });
-canvas.addEventListener("wheel", (e) => {
-  e.preventDefault();
-  const rect = canvas.getBoundingClientRect();
-  zoomAt(e.clientX - rect.left, e.clientY - rect.top, e.deltaY < 0 ? 1.12 : 0.89);
-}, { passive: false });
-resetButton.addEventListener("click", resetView);
-document.querySelector("#map-zoom-in").addEventListener("click", () => zoomAt(W / 2, H / 2, 1.4));
-document.querySelector("#map-zoom-out").addEventListener("click", () => zoomAt(W / 2, H / 2, 1 / 1.4));
-document.querySelector("#map-pan-left").addEventListener("click", () => { tx += W * 0.35; clampTransform(); });
-document.querySelector("#map-pan-right").addEventListener("click", () => { tx -= W * 0.35; clampTransform(); });
 window.addEventListener("resize", resize);
-resize(); clampTransform();
+resize();
 openPlace(PLACES.find((p) => p.name === "札幌"));
 draw();
-

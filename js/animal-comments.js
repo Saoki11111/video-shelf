@@ -1,10 +1,10 @@
-// AIどうぶつの紹介コメント（表示専用の演出データ）
+// 令和どうぶつたちの感想コメント（表示専用の演出データ）
 export const ANIMALS = [
-  { emoji: "🐰", name: "AIうさぎ", bg: "#ffe9f0" },
-  { emoji: "🐯", name: "AIトラ", bg: "#fff3d9" },
-  { emoji: "🐧", name: "AIペンギン", bg: "#e3f2fd" },
-  { emoji: "🦉", name: "AIフクロウ", bg: "#efe9fb" },
-  { emoji: "🐱", name: "AIねこ", bg: "#e9fbe9" },
+  { emoji: "🐰", name: "令和うさぎ", bg: "#ffe9f0" },
+  { emoji: "🐯", name: "令和トラ", bg: "#fff3d9" },
+  { emoji: "🐧", name: "令和ペンギン", bg: "#e3f2fd" },
+  { emoji: "🦉", name: "令和フクロウ", bg: "#efe9fb" },
+  { emoji: "🐱", name: "令和ねこ", bg: "#e9fbe9" },
 ];
 
 // 動画IDごと、ANIMALSと同じ並び（うさぎ・トラ・ペンギン・フクロウ・ねこ）で各2文

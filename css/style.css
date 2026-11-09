@@ -1660,12 +1660,6 @@ a.music-card:hover {
 }
 .map-pin.label-left .pin-label { left: auto; right: calc(50% + 11px); }
 .map-pin.on .pin-label { background: #ff453a; color: #fff; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
-.place-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-.place-chip {
-  border: 1.5px solid var(--line); background: var(--card); color: var(--muted);
-  font-size: 12px; font-weight: 700; border-radius: 999px; padding: 6px 13px; cursor: pointer;
-}
-.place-chip.on { background: #ffb042; border-color: #ffb042; color: #231600; }
 .map-list-row { margin-top: 14px; text-align: right; }
 .map-list-link { color: var(--accent); font-size: 13px; font-weight: 700; text-decoration: none; }
 .map-card { display: flex; gap: 12px; align-items: center; }

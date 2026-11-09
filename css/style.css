@@ -1803,3 +1803,6 @@ a.music-card:hover {
 
 /* ===== 地図の左右移動ボタン（左下） ===== */
 .map-pan { position: absolute; left: 10px; bottom: 10px; z-index: 3; display: flex; gap: 6px; }
+
+/* ===== どうぶつアイコンを画像で統一（端末ごとの絵文字差をなくす） ===== */
+.animal-avatar img { width: 27px; height: 27px; display: block; }

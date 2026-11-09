@@ -10,8 +10,6 @@ const description = document.querySelector("#detail-description");
 const tags = document.querySelector("#detail-tags");
 const musicSection = document.querySelector("#music-section");
 const musicList = document.querySelector("#music-list");
-const detailToggle = document.querySelector("#detail-toggle");
-const detailPanel = document.querySelector("#detail-panel");
 const animalSection = document.querySelector("#animal-section");
 const animalList = document.querySelector("#animal-list");
 const animalShuffle = document.querySelector("#animal-shuffle");
@@ -96,15 +94,6 @@ nextVideosGrid.addEventListener("click", (event) => {
 });
 
 
-if (detailToggle && detailPanel) {
-  detailToggle.addEventListener("click", () => {
-    const open = detailPanel.hidden;
-    detailPanel.hidden = !open;
-    detailToggle.setAttribute("aria-expanded", String(open));
-    detailToggle.classList.toggle("open", open);
-  });
-}
-
 let currentVideoId = null;
 
 function burstLikes(button) {
@@ -142,7 +131,10 @@ function renderAnimals(videoId) {
     const avatar = document.createElement("div");
     avatar.className = "animal-avatar";
     avatar.style.background = animal.bg;
-    avatar.textContent = animal.emoji;
+    const icon = document.createElement("img");
+    icon.src = animal.icon;
+    icon.alt = "";
+    avatar.appendChild(icon);
     const body = document.createElement("div");
     body.className = "animal-body";
     const name = document.createElement("p");

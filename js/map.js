@@ -1,5 +1,5 @@
 
-import { MAP_DOTS } from "./map-data.js";
+import { MAP_RINGS } from "./map-coast.js";
 const PLACES = [
   { name: "札幌", area: "日本", lat: 43.06, lon: 141.35, id: "202609-sapporo", thumb: "images/thumbnails/202609-sapporo.jpg", title: "札幌、青空と羊のいる丘" },
   { name: "石垣島", area: "日本", lat: 24.34, lon: 124.16, id: "202601-ishigaki", thumb: "images/thumbnails/202601-ishigaki.jpg", title: "石垣島、島時間" },
@@ -9,7 +9,8 @@ const PLACES = [
   { name: "バンコク", area: "タイ", lat: 13.76, lon: 100.50, id: "202502-thai", thumb: "images/thumbnails/202502-thai.webp", title: "タイ、夕暮れの市場を歩く" },
   { name: "ジャカルタ", area: "インドネシア", lat: -6.21, lon: 106.85, id: "202605-indonesia", thumb: "images/thumbnails/202605-indonesia.webp", title: "インドネシア、予定外から始まる旅" },
 ];
-const LON0 = 80, LON1 = 158, LAT1 = 54, LAT0 = -14;
+let LON0 = 86, LON1 = 158;
+const LAT1 = 54, LAT0 = -14;
 const canvas = document.querySelector("#travel-map-canvas");
 const pinLayer = document.querySelector("#pin-layer");
 const card = document.querySelector("#map-card");
@@ -29,6 +30,7 @@ function resize() {
   canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   W = rect.width; H = rect.height;
+  if (W < 620) { LON0 = 86; LON1 = 158; } else { LON0 = 60; LON1 = 162; }
 }
 
 // ピン＝本物のボタン
@@ -49,11 +51,15 @@ function draw() {
   requestAnimationFrame(draw);
   if (!W) { resize(); return; }
   ctx.fillStyle = "#0d1830"; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = "rgba(159,196,255,.85)";
-  for (let i = 0; i < MAP_DOTS.length; i += 2) {
-    const p = project(MAP_DOTS[i + 1] / 10, MAP_DOTS[i] / 10);
-    if (p.x < -4 || p.y < -4 || p.x > W + 4 || p.y > H + 4) continue;
-    ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, 7); ctx.fill();
+  for (const ring of MAP_RINGS) {
+    ctx.beginPath();
+    for (let i = 0; i < ring.length; i += 2) {
+      const p = project(ring[i + 1] / 10, ring[i] / 10);
+      if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = "rgba(159,196,255,.07)"; ctx.fill();
+    ctx.strokeStyle = "rgba(170,205,255,.95)"; ctx.lineWidth = 1.3; ctx.stroke();
   }
   for (const { place, el } of pinEls) {
     const p = project(place.lat, place.lon);

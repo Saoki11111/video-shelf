@@ -1685,3 +1685,33 @@ a.music-card:hover {
   padding: 6px 13px;
   cursor: pointer;
 }
+
+/* ===== 見出しの書体をポップ体に統一 ===== */
+.page-intro h1 {
+  font-family: "Hiragino Maru Gothic ProN", "Hiragino Maru Gothic Pro", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+
+/* ===== PC向けレイアウト調整（スマホは現状維持） ===== */
+@media (min-width: 781px) {
+  .travel-map { width: min(880px, calc(100% - 48px)); }
+  #travel-map-canvas { height: 400px; }
+  .hero {
+    max-width: 1120px;
+    margin: 20px auto 0;
+    border-radius: 22px;
+    padding-left: 44px;
+    padding-right: 44px;
+  }
+  .detail-toolbar,
+  .player,
+  .detail-layout,
+  .music-section,
+  .animal-section,
+  .next-videos {
+    max-width: 880px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

@@ -1715,3 +1715,19 @@ a.music-card:hover {
     margin-right: auto;
   }
 }
+
+/* ===== PC向け：Sound & Movie の横並び化と使用曲ボタンの幅 ===== */
+@media (min-width: 781px) {
+  .pick-card {
+    flex-direction: row;
+    align-items: center;
+    aspect-ratio: auto;
+    height: 300px;
+    padding: 30px 38px;
+    gap: 34px;
+  }
+  .pick-jacket { height: 100%; margin-top: 0; }
+  .pick-info { flex: 1; margin-top: 0; padding: 0; }
+  .pick-song { font-size: 21px; }
+  .music-actions { max-width: 540px; }
+}

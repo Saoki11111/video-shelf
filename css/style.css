@@ -1524,3 +1524,83 @@ a.music-card:hover {
   #travel-map-canvas { height: 250px; }
   .map-panel h1 { font-size: 21px; }
 }
+
+/* ===== AIどうぶつの紹介コメント（詳細） ===== */
+.animal-section { padding-top: 64px; }
+.animal-section .section-heading { margin-bottom: 24px; }
+.animal-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.animal-shuffle {
+  flex: 0 0 auto;
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 5px 11px;
+  cursor: pointer;
+}
+.animal-list { display: grid; gap: 10px; }
+.animal-row {
+  display: flex;
+  gap: 11px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.animal-avatar {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+.animal-body { flex: 1; min-width: 0; }
+.animal-name { margin: 0; font-size: 12.5px; font-weight: 800; color: var(--ink); }
+.animal-text { margin: 2px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+.animal-foot { margin-top: 6px; }
+.animal-like {
+  position: relative;
+  overflow: visible;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 10px 3px 8px;
+  cursor: pointer;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.animal-like .animal-heart { font-size: 12px; line-height: 1; display: inline-block; }
+.animal-like.liked {
+  color: #ff7a6e;
+  border-color: rgba(255, 92, 80, .55);
+  background: rgba(255, 92, 80, .1);
+  font-weight: 700;
+}
+.animal-like.liked .animal-heart {
+  animation: animal-heartpop .5s cubic-bezier(.17,.89,.32,1.28);
+  filter: drop-shadow(0 0 6px rgba(255,92,80,.9));
+}
+.animal-like:active { transform: scale(.94); }
+.animal-spark {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.animal-note { margin: 10px 0 0; font-size: 10.5px; color: var(--muted); }
+@keyframes animal-heartpop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.55) rotate(-8deg); }
+  60% { transform: scale(.88); }
+  100% { transform: scale(1); }
+}

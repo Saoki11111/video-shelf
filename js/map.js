@@ -17,7 +17,6 @@ const cardThumb = document.querySelector("#map-card-thumb");
 const cardTitle = document.querySelector("#map-card-title");
 const cardLink = document.querySelector("#map-card-link");
 const resetButton = document.querySelector("#map-reset");
-const chipsWrap = document.querySelector("#place-chips");
 const ctx = canvas.getContext("2d");
 let W = 0, H = 0, scale = 1, tx = 0, ty = 0;
 let currentPlace = null;
@@ -84,18 +83,6 @@ function draw() {
   }
 }
 
-// 国チップ
-const AREAS = [...new Set(PLACES.map(p => p.area))];
-AREAS.forEach((area) => {
-  const chip = document.createElement("button");
-  chip.type = "button"; chip.className = "place-chip"; chip.textContent = area; chip.dataset.area = area;
-  chip.addEventListener("click", () => {
-    const places = PLACES.filter(p => p.area === area);
-    if (places.length === 1 || !places.includes(currentPlace)) openPlace(places[0]);
-    else openPlace(places[(places.indexOf(currentPlace) + 1) % places.length]);
-  });
-  chipsWrap.append(chip);
-});
 
 function openPlace(place) {
   currentPlace = place;
@@ -103,7 +90,6 @@ function openPlace(place) {
   cardTitle.textContent = place.title;
   cardLink.href = `video.html?id=${encodeURIComponent(place.id)}`;
   card.hidden = false;
-  [...chipsWrap.children].forEach(chip => chip.classList.toggle("on", chip.dataset.area === place.area));
 }
 
 // パン・ピンチ・ホイール・ダブルタップ

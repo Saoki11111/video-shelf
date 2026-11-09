@@ -1,115 +1,153 @@
+
 import { MAP_DOTS } from "./map-data.js";
-
 const PLACES = [
-  { name: "札幌", area: "日本", lat: 43.06, lon: 141.35, id: "202609-sapporo", title: "札幌、青空と羊のいる丘" },
-  { name: "石垣島", area: "日本", lat: 24.34, lon: 124.16, id: "202601-ishigaki", title: "石垣島、島時間" },
-  { name: "上海", area: "中国", lat: 31.23, lon: 121.47, id: "202509-shanghai", title: "上海、過去と未来のあいだ" },
-  { name: "香港", area: "香港", lat: 22.32, lon: 114.17, id: "202603-hongkong", title: "香港、光と熱気の街" },
-  { name: "マニラ", area: "フィリピン", lat: 14.60, lon: 120.98, id: "202511-manila", title: "マニラ、ジープニーを追いかけて" },
-  { name: "バンコク", area: "タイ", lat: 13.76, lon: 100.50, id: "202502-thai", title: "タイ、夕暮れの市場を歩く" },
-  { name: "ジャカルタ", area: "インドネシア", lat: -6.21, lon: 106.85, id: "202605-indonesia", title: "インドネシア、予定外から始まる旅" },
+  { name: "札幌", area: "日本", lat: 43.06, lon: 141.35, id: "202609-sapporo", thumb: "images/thumbnails/202609-sapporo.jpg", title: "札幌、青空と羊のいる丘" },
+  { name: "石垣島", area: "日本", lat: 24.34, lon: 124.16, id: "202601-ishigaki", thumb: "images/thumbnails/202601-ishigaki.jpg", title: "石垣島、島時間" },
+  { name: "上海", area: "中国", lat: 31.23, lon: 121.47, id: "202509-shanghai", thumb: "images/thumbnails/202509-shanghai.jpg", title: "上海、過去と未来のあいだ" },
+  { name: "香港", area: "香港", lat: 22.32, lon: 114.17, id: "202603-hongkong", thumb: "images/thumbnails/202603-hongkong.jpg", title: "香港、光と熱気の街" },
+  { name: "マニラ", area: "フィリピン", lat: 14.60, lon: 120.98, id: "202511-manila", thumb: "images/thumbnails/202511-manila.jpg", title: "マニラ、ジープニーを追いかけて" },
+  { name: "バンコク", area: "タイ", lat: 13.76, lon: 100.50, id: "202502-thai", thumb: "images/thumbnails/202502-thai.webp", title: "タイ、夕暮れの市場を歩く" },
+  { name: "ジャカルタ", area: "インドネシア", lat: -6.21, lon: 106.85, id: "202605-indonesia", thumb: "images/thumbnails/202605-indonesia.webp", title: "インドネシア、予定外から始まる旅" },
 ];
-
-const LON0 = 62, LON1 = 156, LAT1 = 54, LAT0 = -14;
+const LON0 = 62, LON1 = 156, LAT1 = 54, LAT0 = -14, MAX_SCALE = 3.2;
 const canvas = document.querySelector("#travel-map-canvas");
+const pinLayer = document.querySelector("#pin-layer");
 const card = document.querySelector("#map-card");
+const cardThumb = document.querySelector("#map-card-thumb");
 const cardPlace = document.querySelector("#map-card-place");
 const cardTitle = document.querySelector("#map-card-title");
 const cardLink = document.querySelector("#map-card-link");
+const resetButton = document.querySelector("#map-reset");
+const chipsWrap = document.querySelector("#place-chips");
+const ctx = canvas.getContext("2d");
+let W = 0, H = 0, scale = 1, tx = 0, ty = 0;
+let currentPlace = null;
 
-if (canvas) {
-  const ctx = canvas.getContext("2d");
-  let W = 0, H = 0, pins = [], landCache = null;
+const baseProject = (lat, lon) => ({ x: ((lon - LON0) / (LON1 - LON0)) * W, y: ((LAT1 - lat) / (LAT1 - LAT0)) * H });
+const project = (lat, lon) => { const p = baseProject(lat, lon); return { x: p.x * scale + tx, y: p.y * scale + ty }; };
 
-  const project = (lat, lon) => ({
-    x: ((lon - LON0) / (LON1 - LON0)) * W,
-    y: ((LAT1 - lat) / (LAT1 - LAT0)) * H,
-  });
-
-  function renderLand() {
-    landCache = document.createElement("canvas");
-    landCache.width = W;
-    landCache.height = H;
-    const c = landCache.getContext("2d");
-    c.fillStyle = "#0d1830";
-    c.fillRect(0, 0, W, H);
-    c.fillStyle = "rgba(159,196,255,.85)";
-    const r = Math.max(1.2, W / 340);
-    for (let i = 0; i < MAP_DOTS.length; i += 2) {
-      const p = project(MAP_DOTS[i + 1] / 10, MAP_DOTS[i] / 10);
-      c.beginPath();
-      c.arc(p.x, p.y, r, 0, 7);
-      c.fill();
-    }
-  }
-
-  function resize() {
-    const rect = canvas.getBoundingClientRect();
-    if (!rect.width) return;
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    W = canvas.width;
-    H = canvas.height;
-    renderLand();
-  }
-
-  function draw() {
-    requestAnimationFrame(draw);
-    if (!W) { resize(); return; }
-    if (!landCache) return;
-    ctx.clearRect(0, 0, W, H);
-    ctx.drawImage(landCache, 0, 0);
-    pins = [];
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const pulse = 1 + 0.25 * Math.sin(Date.now() / 350);
-    ctx.font = `600 ${10.5 * dpr}px sans-serif`;
-    for (const place of PLACES) {
-      const p = project(place.lat, place.lon);
-      pins.push({ x: p.x, y: p.y, place });
-      ctx.fillStyle = "rgba(255,176,66,.35)";
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 5.5 * dpr * pulse, 0, 7);
-      ctx.fill();
-      ctx.fillStyle = "#ffb042";
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 2.6 * dpr + 1.4, 0, 7);
-      ctx.fill();
-      ctx.fillStyle = "#0b1220";
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 1.8, 0, 7);
-      ctx.fill();
-      ctx.fillStyle = "rgba(232,240,255,.95)";
-      if (place.name === "札幌") {
-        ctx.textAlign = "right";
-        ctx.fillText(place.name, p.x - 5 * dpr, p.y + 3.5);
-      } else {
-        ctx.textAlign = "left";
-        ctx.fillText(place.name, p.x + 5 * dpr, p.y + 3.5);
-      }
-    }
-  }
-
-  canvas.addEventListener("pointerup", (event) => {
-    const rect = canvas.getBoundingClientRect();
-    const scale = canvas.width / rect.width;
-    const mx = (event.clientX - rect.left) * scale;
-    const my = (event.clientY - rect.top) * scale;
-    let best = null, bestDist = 24 * (window.devicePixelRatio || 1);
-    for (const pin of pins) {
-      const d = Math.hypot(pin.x - mx, pin.y - my);
-      if (d < bestDist) { bestDist = d; best = pin; }
-    }
-    if (best && card) {
-      cardPlace.textContent = `${best.place.area} ・ ${best.place.name}`;
-      cardTitle.textContent = best.place.title;
-      cardLink.href = `video.html?id=${encodeURIComponent(best.place.id)}`;
-      card.hidden = false;
-      card.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
-  });
-
-  window.addEventListener("resize", resize);
-  resize();
-  draw();
+function clampTransform() {
+  scale = Math.min(MAX_SCALE, Math.max(1, scale));
+  tx = Math.min(0, Math.max(W - W * scale, tx));
+  ty = Math.min(0, Math.max(H - H * scale, ty));
+  if (scale === 1) { tx = 0; ty = 0; }
+  canvas.style.touchAction = scale > 1.05 ? "none" : "pan-y";
+  resetButton.hidden = scale <= 1.05;
 }
+function resetView() { scale = 1; tx = 0; ty = 0; clampTransform(); }
+function zoomAt(cx, cy, factor) {
+  const next = Math.min(MAX_SCALE, Math.max(1, scale * factor));
+  const ratio = next / scale;
+  tx = cx - (cx - tx) * ratio; ty = cy - (cy - ty) * ratio; scale = next;
+  clampTransform();
+}
+function resize() {
+  const rect = canvas.getBoundingClientRect();
+  if (!rect.width) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  W = rect.width; H = rect.height;
+  clampTransform();
+}
+
+// ピン＝本物のボタン
+const pinEls = PLACES.map((place) => {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "map-pin" + (place.name === "札幌" ? " label-left" : "");
+  btn.setAttribute("aria-label", place.name + "の動画");
+  const dot = document.createElement("span"); dot.className = "pin-dot";
+  const label = document.createElement("span"); label.className = "pin-label"; label.textContent = place.name;
+  btn.append(dot, label);
+  btn.addEventListener("click", () => openPlace(place));
+  pinLayer.append(btn);
+  return { place, el: btn };
+});
+
+function draw() {
+  requestAnimationFrame(draw);
+  if (!W) { resize(); return; }
+  ctx.fillStyle = "#0d1830"; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "rgba(159,196,255,.85)";
+  const dotR = Math.max(1, 1.5 * Math.min(scale, 1.7));
+  for (let i = 0; i < MAP_DOTS.length; i += 2) {
+    const p = project(MAP_DOTS[i + 1] / 10, MAP_DOTS[i] / 10);
+    if (p.x < -4 || p.y < -4 || p.x > W + 4 || p.y > H + 4) continue;
+    ctx.beginPath(); ctx.arc(p.x, p.y, dotR, 0, 7); ctx.fill();
+  }
+  for (const { place, el } of pinEls) {
+    const p = project(place.lat, place.lon);
+    const off = p.x < -30 || p.y < -30 || p.x > W + 30 || p.y > H + 30;
+    el.style.display = off ? "none" : "block";
+    if (!off) el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%,-50%)`;
+    el.classList.toggle("on", currentPlace === place);
+  }
+}
+
+// 国チップ
+const AREAS = [...new Set(PLACES.map(p => p.area))];
+AREAS.forEach((area) => {
+  const chip = document.createElement("button");
+  chip.type = "button"; chip.className = "place-chip"; chip.textContent = area; chip.dataset.area = area;
+  chip.addEventListener("click", () => {
+    const places = PLACES.filter(p => p.area === area);
+    if (places.length === 1 || !places.includes(currentPlace)) openPlace(places[0]);
+    else openPlace(places[(places.indexOf(currentPlace) + 1) % places.length]);
+  });
+  chipsWrap.append(chip);
+});
+
+function openPlace(place) {
+  currentPlace = place;
+  cardThumb.src = place.thumb; cardThumb.alt = "";
+  cardPlace.textContent = place.area + " ・ " + place.name;
+  cardTitle.textContent = place.title;
+  cardLink.href = `video.html?id=${encodeURIComponent(place.id)}`;
+  card.hidden = false;
+  [...chipsWrap.children].forEach(chip => chip.classList.toggle("on", chip.dataset.area === place.area));
+}
+
+// パン・ピンチ・ホイール・ダブルタップ
+const pointers = new Map();
+let downX = 0, downY = 0, moved = false, pinchDist = 0, lastTapAt = 0;
+canvas.addEventListener("pointerdown", (e) => {
+  canvas.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 1) { downX = e.clientX; downY = e.clientY; moved = false; }
+  if (pointers.size === 2) { const [a, b] = [...pointers.values()]; pinchDist = Math.hypot(a.x - b.x, a.y - b.y); moved = true; }
+});
+canvas.addEventListener("pointermove", (e) => {
+  if (!pointers.has(e.pointerId)) return;
+  const prev = pointers.get(e.pointerId);
+  const dx = e.clientX - prev.x, dy = e.clientY - prev.y;
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (Math.hypot(e.clientX - downX, e.clientY - downY) > 7) moved = true;
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    const dist = Math.hypot(a.x - b.x, a.y - b.y);
+    const rect = canvas.getBoundingClientRect();
+    if (pinchDist > 0) zoomAt((a.x + b.x) / 2 - rect.left, (a.y + b.y) / 2 - rect.top, dist / pinchDist);
+    pinchDist = dist;
+  } else if (pointers.size === 1 && moved && scale > 1) {
+    tx += dx; ty += dy; clampTransform();
+  }
+});
+canvas.addEventListener("pointerup", () => {
+  pointers.clear(); pinchDist = 0;
+  if (!moved && scale > 1) {
+    const now = Date.now();
+    if (now - lastTapAt < 320) { resetView(); lastTapAt = 0; } else lastTapAt = now;
+  }
+});
+canvas.addEventListener("pointercancel", () => { pointers.clear(); pinchDist = 0; });
+canvas.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  zoomAt(e.clientX - rect.left, e.clientY - rect.top, e.deltaY < 0 ? 1.12 : 0.89);
+}, { passive: false });
+resetButton.addEventListener("click", resetView);
+window.addEventListener("resize", resize);
+resize(); clampTransform();
+draw();
+

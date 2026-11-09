@@ -30,17 +30,27 @@
           <p class="map-sub">アジア・太平洋エリア ― ピンから旅の動画へ</p>
           <div class="map-wrap">
             <canvas id="travel-map-canvas" aria-label="アジア・太平洋エリアの旅行マップ"></canvas>
+            <div id="pin-layer"></div>
+            <button id="map-reset" class="map-reset" type="button" hidden>全体表示</button>
           </div>
+          <p class="map-hint">ピンをタップすると動画が開きます。ピンチで拡大、ドラッグで移動もできます。</p>
+          <div id="place-chips" class="place-chips" aria-label="国・地域から選ぶ"></div>
           <div class="map-stats">
             <div class="map-stat"><b>6</b><span>国・地域</span></div>
             <div class="map-stat"><b>7</b><span>旅の記録</span></div>
             <div class="map-stat"><b>16,676</b><span>km の軌跡</span></div>
           </div>
+          <div class="map-list-row">
+            <a class="map-list-link" href="timeline.html">動画の一覧を見る →</a>
+          </div>
         </div>
         <div id="map-card" class="map-card" hidden>
-          <p id="map-card-place" class="map-card-place"></p>
-          <p id="map-card-title" class="map-card-title"></p>
-          <a id="map-card-link" class="map-card-link" href="#">▶ 動画を見る</a>
+          <img id="map-card-thumb" class="map-card-thumb" src="" alt="">
+          <div class="map-card-body">
+            <p id="map-card-place" class="map-card-place"></p>
+            <p id="map-card-title" class="map-card-title"></p>
+            <a id="map-card-link" class="map-card-link" href="#">▶ 動画を見る</a>
+          </div>
         </div>
       </section>
 

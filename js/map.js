@@ -9,7 +9,7 @@ const PLACES = [
   { name: "バンコク", area: "タイ", lat: 13.76, lon: 100.50, id: "202502-thai", thumb: "images/thumbnails/202502-thai.webp", title: "タイ、夕暮れの市場を歩く" },
   { name: "ジャカルタ", area: "インドネシア", lat: -6.21, lon: 106.85, id: "202605-indonesia", thumb: "images/thumbnails/202605-indonesia.webp", title: "インドネシア、予定外から始まる旅" },
 ];
-const LON0 = 62, LON1 = 156, LAT1 = 54, LAT0 = -14;
+const LON0 = 80, LON1 = 158, LAT1 = 54, LAT0 = -14;
 const canvas = document.querySelector("#travel-map-canvas");
 const pinLayer = document.querySelector("#pin-layer");
 const card = document.querySelector("#map-card");

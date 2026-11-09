@@ -1484,7 +1484,7 @@ a.music-card:hover {
   font-weight: 600;
   color: var(--ink);
 }
-.map-sub { margin: 0 0 12px; font-size: 12px; color: var(--muted); }
+.map-sub { margin: 0 0 4px; font-size: 12px; color: var(--muted); }
 .map-wrap {
   border-radius: 14px;
   overflow: hidden;
@@ -1759,7 +1759,7 @@ a.music-card:hover {
 }
 
 /* ===== ヒント文をサブテキストと同じ大きさに ===== */
-.map-hint { margin: 10px 0 0; font-size: 12px; color: var(--muted); line-height: 1.6; }
+.map-hint { margin: 0 0 12px; font-size: 12px; color: var(--muted); line-height: 1.6; }
 
 /* ===== 地図パネルの見出し行（右に一覧ボタン） ===== */
 .map-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }

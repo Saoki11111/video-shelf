@@ -32,9 +32,26 @@
           <article>
             <div id="detail-tags" class="card-tags"></div>
             <h1 id="detail-title"></h1>
+          </article>
+        </div>
+        <div class="detail-accordion">
+          <button id="detail-toggle" class="detail-toggle" type="button" aria-expanded="false" aria-controls="detail-panel">
+            <span>動画の詳細</span>
+            <svg class="detail-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5.5 9.5 12 16l6.5-6.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div id="detail-panel" class="detail-panel" hidden>
             <p id="detail-date" class="detail-date"></p>
             <p id="detail-description" class="detail-description"></p>
-          </article>
+          <section id="music-section" class="music-section" hidden aria-labelledby="music-title">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">MUSIC</p>
+                <h2 id="music-title">使用曲</h2>
+              </div>
+            </div>
+            <div id="music-list" class="music-list"></div>
+          </section>
+          </div>
         </div>
         <section id="animal-section" class="animal-section" hidden aria-labelledby="animal-title">
           <div class="section-heading animal-heading">
@@ -45,15 +62,6 @@
             <button id="animal-shuffle" class="animal-shuffle" type="button">↻ シャッフル</button>
           </div>
           <div id="animal-list" class="animal-list"></div>
-        </section>
-        <section id="music-section" class="music-section" hidden aria-labelledby="music-title">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">MUSIC</p>
-              <h2 id="music-title">使用曲</h2>
-            </div>
-          </div>
-          <div id="music-list" class="music-list"></div>
         </section>
         <section id="next-videos" class="next-videos" aria-labelledby="next-videos-title">
           <div class="section-heading">

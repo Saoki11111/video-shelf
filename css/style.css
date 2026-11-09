@@ -1517,8 +1517,7 @@ a.music-card:hover {
   border-radius: 16px;
   padding: 14px 16px;
 }
-.map-card-place { margin: 0; font-size: 11px; color: var(--accent); font-weight: 700; letter-spacing: .08em; }
-.map-card-title { margin: 4px 0 10px; font-size: 15px; font-weight: 700; color: var(--ink); }
+.map-card-title { margin: 0 0 10px; font-size: 15px; font-weight: 700; color: var(--ink); }
 .map-card-link {
   display: inline-block;
   background: var(--accent);
@@ -1762,3 +1761,6 @@ a.music-card:hover {
   .top-sections .shelf { width: min(720px, 100%); margin-inline: auto; }
   .music-tracks { grid-template-columns: 1fr 1fr; gap: 12px; }
 }
+
+/* ===== ヒント文をサブテキストと同じ大きさに ===== */
+.map-hint { margin: 10px 0 0; font-size: 12px; color: var(--muted); line-height: 1.6; }

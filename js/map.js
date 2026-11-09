@@ -14,7 +14,6 @@ const canvas = document.querySelector("#travel-map-canvas");
 const pinLayer = document.querySelector("#pin-layer");
 const card = document.querySelector("#map-card");
 const cardThumb = document.querySelector("#map-card-thumb");
-const cardPlace = document.querySelector("#map-card-place");
 const cardTitle = document.querySelector("#map-card-title");
 const cardLink = document.querySelector("#map-card-link");
 const resetButton = document.querySelector("#map-reset");
@@ -101,7 +100,6 @@ AREAS.forEach((area) => {
 function openPlace(place) {
   currentPlace = place;
   cardThumb.src = place.thumb; cardThumb.alt = "";
-  cardPlace.textContent = place.area + " ・ " + place.name;
   cardTitle.textContent = place.title;
   cardLink.href = `video.html?id=${encodeURIComponent(place.id)}`;
   card.hidden = false;
@@ -149,5 +147,6 @@ canvas.addEventListener("wheel", (e) => {
 resetButton.addEventListener("click", resetView);
 window.addEventListener("resize", resize);
 resize(); clampTransform();
+openPlace(PLACES.find((p) => p.name === "札幌"));
 draw();
 

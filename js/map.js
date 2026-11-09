@@ -133,6 +133,8 @@ canvas.addEventListener("wheel", (e) => {
 resetButton.addEventListener("click", resetView);
 document.querySelector("#map-zoom-in").addEventListener("click", () => zoomAt(W / 2, H / 2, 1.4));
 document.querySelector("#map-zoom-out").addEventListener("click", () => zoomAt(W / 2, H / 2, 1 / 1.4));
+document.querySelector("#map-pan-left").addEventListener("click", () => { tx += W * 0.35; clampTransform(); });
+document.querySelector("#map-pan-right").addEventListener("click", () => { tx -= W * 0.35; clampTransform(); });
 window.addEventListener("resize", resize);
 resize(); clampTransform();
 openPlace(PLACES.find((p) => p.name === "札幌"));

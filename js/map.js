@@ -131,6 +131,8 @@ canvas.addEventListener("wheel", (e) => {
   zoomAt(e.clientX - rect.left, e.clientY - rect.top, e.deltaY < 0 ? 1.12 : 0.89);
 }, { passive: false });
 resetButton.addEventListener("click", resetView);
+document.querySelector("#map-zoom-in").addEventListener("click", () => zoomAt(W / 2, H / 2, 1.4));
+document.querySelector("#map-zoom-out").addEventListener("click", () => zoomAt(W / 2, H / 2, 1 / 1.4));
 window.addEventListener("resize", resize);
 resize(); clampTransform();
 openPlace(PLACES.find((p) => p.name === "札幌"));

@@ -1756,3 +1756,9 @@ a.music-card:hover {
 @media (min-width: 781px) {
   .detail-accordion { max-width: 880px; margin-left: auto; margin-right: auto; }
 }
+
+/* ===== Sound & Movie の端揃え／使用曲ページの2列化（PC） ===== */
+@media (min-width: 781px) {
+  .top-sections .shelf { width: min(720px, 100%); margin-inline: auto; }
+  .music-tracks { grid-template-columns: 1fr 1fr; gap: 12px; }
+}

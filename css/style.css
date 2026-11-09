@@ -1608,3 +1608,62 @@ a.music-card:hover {
 @media (max-width: 780px) {
   .animal-section { padding: 48px 20px 0; }
 }
+
+/* ===== 旅の地図 v2（ボタン式ピン・国チップ・ポップ体） ===== */
+.map-panel h1 {
+  font-family: "Hiragino Maru Gothic ProN", "Hiragino Maru Gothic Pro", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+.map-stat b {
+  font-family: "Hiragino Maru Gothic ProN", "Hiragino Maru Gothic Pro", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-weight: 800;
+}
+#pin-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.map-pin {
+  position: absolute; left: 0; top: 0; width: 44px; height: 44px;
+  margin: 0; padding: 0; background: none; border: none; cursor: pointer;
+  pointer-events: auto; -webkit-tap-highlight-color: transparent;
+}
+.pin-dot {
+  position: absolute; left: 50%; top: 50%; width: 15px; height: 15px;
+  margin: -7.5px 0 0 -7.5px; border-radius: 50%; background: #ffb042;
+  border: 2.5px solid #fff; box-shadow: 0 1px 6px rgba(0,0,0,.5);
+}
+.pin-dot::after {
+  content: ""; position: absolute; inset: -8px; border-radius: 50%;
+  border: 2px solid rgba(255,176,66,.55); animation: pinping 1.8s ease-out infinite;
+}
+@keyframes pinping {
+  0% { transform: scale(.55); opacity: 1; }
+  70% { transform: scale(1.15); opacity: 0; }
+  100% { transform: scale(1.15); opacity: 0; }
+}
+.map-pin.on { z-index: 2; }
+.map-pin.on .pin-dot {
+  background: #ff453a; width: 20px; height: 20px; margin: -10px 0 0 -10px;
+  border-width: 3px; box-shadow: 0 0 0 5px rgba(255,69,58,.28), 0 2px 10px rgba(0,0,0,.55);
+}
+.map-pin.on .pin-dot::after { border-color: rgba(255,69,58,.7); }
+.pin-label {
+  position: absolute; left: calc(50% + 11px); top: 50%; transform: translateY(-50%);
+  background: rgba(8,18,38,.85); color: #e8f0ff; font-size: 11px; font-weight: 700;
+  padding: 3px 8px; border-radius: 999px; white-space: nowrap;
+}
+.map-pin.label-left .pin-label { left: auto; right: calc(50% + 11px); }
+.map-pin.on .pin-label { background: #ff453a; color: #fff; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
+.place-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.place-chip {
+  border: 1.5px solid var(--line); background: var(--card); color: var(--muted);
+  font-size: 12px; font-weight: 700; border-radius: 999px; padding: 6px 13px; cursor: pointer;
+}
+.place-chip.on { background: #ffb042; border-color: #ffb042; color: #231600; }
+.map-list-row { margin-top: 14px; text-align: right; }
+.map-list-link { color: var(--accent); font-size: 13px; font-weight: 700; text-decoration: none; }
+.map-card { display: flex; gap: 12px; align-items: center; }
+.map-card-thumb {
+  flex: 0 0 auto; width: 118px; aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: 10px; display: block;
+}
+.map-card-body { flex: 1; min-width: 0; }
+.map-card-title { margin-bottom: 10px; }

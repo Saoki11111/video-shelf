@@ -123,17 +123,13 @@ select {
 }
 
 .brand-mark {
-  display: grid;
+  display: block;
   width: 30px;
   height: 30px;
-  color: white;
-  background: #2868e8;
   border-radius: 10px;
-  place-items: center;
-  font-size: 9px;
-  font-weight: 900;
   padding: 0;
   box-shadow: 4px 4px 0 #163a83;
+  object-fit: cover;
 }
 
 .hero {

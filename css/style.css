@@ -1768,3 +1768,8 @@ a.music-card:hover {
 @media (min-width: 781px) {
   .site-concept { margin-top: 36px; padding: 30px 22px; }
 }
+
+/* ===== 地図のズームボタン（右上） ===== */
+.map-zoom { position: absolute; right: 10px; top: 10px; z-index: 3; display: flex; flex-direction: column; gap: 6px; }
+.map-zoom-btn { width: 36px; height: 36px; display: grid; place-items: center; padding: 0; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(8,18,38,.85); color: #e8f0ff; cursor: pointer; }
+.map-zoom-btn svg { width: 16px; height: 16px; display: block; }

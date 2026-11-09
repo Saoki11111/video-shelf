@@ -1604,3 +1604,7 @@ a.music-card:hover {
   60% { transform: scale(.88); }
   100% { transform: scale(1); }
 }
+
+@media (max-width: 780px) {
+  .animal-section { padding: 48px 20px 0; }
+}

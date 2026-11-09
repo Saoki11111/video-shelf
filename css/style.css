@@ -1797,3 +1797,6 @@ a.music-card:hover {
   .site-concept { margin-top: 40px; padding: 6px 0 6px 18px; }
   .site-concept p:last-child { font-size: 18px; }
 }
+
+/* ===== どうぶつたちの感想：コンセプト文 ===== */
+.animal-note { margin: 6px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.6; }

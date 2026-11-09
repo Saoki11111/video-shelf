@@ -1,4 +1,5 @@
 import { createCard, fetchVideos } from "./shared.js";
+import { ANIMALS, ANIMAL_COMMENTS } from "./animal-comments.js";
 
 const detail = document.querySelector("#detail");
 const errorState = document.querySelector("#error-state");
@@ -9,6 +10,9 @@ const description = document.querySelector("#detail-description");
 const tags = document.querySelector("#detail-tags");
 const musicSection = document.querySelector("#music-section");
 const musicList = document.querySelector("#music-list");
+const animalSection = document.querySelector("#animal-section");
+const animalList = document.querySelector("#animal-list");
+const animalShuffle = document.querySelector("#animal-shuffle");
 const nextVideos = document.querySelector("#next-videos");
 const nextVideosGrid = document.querySelector("#next-videos-grid");
 const nextVideosPrev = document.querySelector("#next-videos-prev");
@@ -89,6 +93,85 @@ nextVideosGrid.addEventListener("click", (event) => {
   suppressNextVideoClick = false;
 });
 
+
+let currentVideoId = null;
+
+function burstLikes(button) {
+  for (let i = 0; i < 7; i++) {
+    const spark = document.createElement("span");
+    spark.className = "animal-spark";
+    spark.style.background = i % 2 ? "#ff5c50" : "#ffb042";
+    button.append(spark);
+    const angle = (Math.PI * 2 * i) / 7 + Math.random() * 0.5;
+    const distance = 20 + Math.random() * 14;
+    spark.animate(
+      [
+        { transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
+        { transform: `translate(${Math.cos(angle) * distance - 2}px, ${Math.sin(angle) * distance - 2}px) scale(.3)`, opacity: 0 },
+      ],
+      { duration: 560, easing: "cubic-bezier(.17,.89,.32,1.28)" },
+    ).onfinish = () => spark.remove();
+  }
+}
+
+function renderAnimals(videoId) {
+  const lines = ANIMAL_COMMENTS[videoId];
+  if (!animalSection || !animalList || !lines) return;
+  currentVideoId = videoId;
+  const order = ANIMALS.map((animal, index) => ({ animal, lines: lines[index] ?? [] }))
+    .filter((entry) => entry.lines.length);
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  const picked = order.slice(0, 3);
+  animalList.replaceChildren(...picked.map(({ animal, lines: animalLines }) => {
+    const row = document.createElement("div");
+    row.className = "animal-row";
+    const avatar = document.createElement("div");
+    avatar.className = "animal-avatar";
+    avatar.style.background = animal.bg;
+    avatar.textContent = animal.emoji;
+    const body = document.createElement("div");
+    body.className = "animal-body";
+    const name = document.createElement("p");
+    name.className = "animal-name";
+    name.textContent = animal.name;
+    const text = document.createElement("p");
+    text.className = "animal-text";
+    text.textContent = animalLines[Math.floor(Math.random() * animalLines.length)];
+    const foot = document.createElement("div");
+    foot.className = "animal-foot";
+    const like = document.createElement("button");
+    like.type = "button";
+    like.className = "animal-like";
+    like.setAttribute("aria-label", "いいね");
+    const heart = document.createElement("span");
+    heart.className = "animal-heart";
+    heart.textContent = "♡";
+    const count = document.createElement("span");
+    count.textContent = String(4 + Math.floor(Math.random() * 22));
+    like.append(heart, count);
+    like.addEventListener("click", () => {
+      const liked = like.classList.toggle("liked");
+      count.textContent = String(parseInt(count.textContent, 10) + (liked ? 1 : -1));
+      heart.textContent = liked ? "♥" : "♡";
+      if (liked) burstLikes(like);
+    });
+    foot.append(like);
+    body.append(name, text, foot);
+    row.append(avatar, body);
+    return row;
+  }));
+  animalSection.hidden = false;
+}
+
+if (animalShuffle) {
+  animalShuffle.addEventListener("click", () => {
+    if (currentVideoId) renderAnimals(currentVideoId);
+  });
+}
+
 function renderVideo(video, videos) {
   document.title = `${video.title} | Video Shelf`;
   title.textContent = video.title;
@@ -168,6 +251,8 @@ function renderVideo(video, videos) {
     });
     musicSection.hidden = false;
   }
+
+  renderAnimals(video.id);
 
   if (nextVideosGrid) {
     nextVideosGrid.replaceChildren(...getRandomVideos(videos, video.id).map(createCard));

@@ -1802,7 +1802,8 @@ a.music-card:hover {
 /* インタビューへのバナー（トップ） */
 .interview-banner {
   display: flex; align-items: center; gap: 12px;
-  margin: 20px 0 4px; padding: 12px 14px;
+  width: min(880px, calc(100% - 40px));
+  margin: 20px auto 4px; padding: 12px 14px;
   background: linear-gradient(90deg, #14264c, #101d3d);
   border: 1px solid rgba(159, 196, 255, .25); border-radius: 14px;
   color: var(--ink); text-decoration: none;
@@ -1817,3 +1818,19 @@ a.music-card:hover {
 .interview-banner .ib-text strong { display: block; font-size: 14px; }
 .interview-banner .ib-text small { color: var(--muted); font-size: 11.5px; }
 .interview-banner .ib-arrow { margin-left: auto; color: var(--accent); font-weight: 800; }
+
+/* インタビューページ（interview.html） */
+.interview { width: min(760px, calc(100% - 40px)); margin: 0 auto; padding: 6px 0 10px; }
+.interview h1 { font-size: 27px; line-height: 1.45; margin: 0 0 12px; }
+.interview .lead { color: var(--muted); font-size: 14px; line-height: 1.9; margin: 0 0 26px; }
+.qa { margin-bottom: 26px; }
+.qa .q { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+.qa .face { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; }
+.qa .face img { width: 34px; height: 34px; }
+.qa .who { font-size: 11px; color: var(--muted); margin: 0 0 3px; font-weight: 700; }
+.qa .bubble { background: #14264c; border: 1px solid rgba(159, 196, 255, .25); border-radius: 4px 16px 16px 16px; padding: 11px 14px; font-size: 14.5px; font-weight: 700; line-height: 1.6; margin: 0; }
+.qa .a { margin: 0 0 0 56px; background: #0d1830; border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: 12px 15px; font-size: 14px; line-height: 1.9; }
+.qa .a .who { color: var(--accent); font-weight: 800; letter-spacing: .08em; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.qa .a .who img { width: 30px; height: 30px; border-radius: 50%; background: #e8f0ff; padding: 2px; }
+.qa .a p { margin: 0; }
+.interview .back { display: inline-block; margin-top: 6px; color: var(--accent); font-weight: 700; font-size: 13.5px; }

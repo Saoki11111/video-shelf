@@ -1851,4 +1851,4 @@ a.music-card:hover {
 }
 
 /* 詳細ページ：感想の下のトップへ戻るリンク */
-.back-to-top { display: inline-block; margin-top: 28px; color: var(--accent); font-weight: 700; font-size: 13.5px; }
+.back-to-top { display: block; width: min(880px, calc(100% - 40px)); margin: 28px auto 0; color: var(--accent); font-weight: 700; font-size: 13.5px; }

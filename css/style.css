@@ -1893,3 +1893,9 @@ a.music-card:hover {
 @media (min-width: 781px) {
   .shelf[aria-label="Sound & Movie"] { max-width: 880px; margin-left: auto; margin-right: auto; }
 }
+
+/* PC：Sound & Movie を上のセクションと同じ880px幅に（720px指定を上書き） */
+@media (min-width: 781px) {
+  .top-sections .shelf[aria-label="Sound & Movie"] { width: min(880px, 100%); }
+  .pick-stage { max-width: 880px; }
+}

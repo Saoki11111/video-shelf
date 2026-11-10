@@ -1863,3 +1863,22 @@ a.music-card:hover {
 /* 地図ヘッド：ボタンは見出しの横、サブとヒントは全幅 */
 .map-head { display: block; }
 .map-head-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 6px; }
+
+/* ===== ピンカード：ボタンを右寄せ（案B） ===== */
+.map-card-body { display: flex; align-items: center; gap: 12px; }
+.map-card-title { margin: 0; }
+.map-card-link { margin-left: auto; flex: none; white-space: nowrap; padding: 7px 13px; font-size: 12px; }
+
+/* ===== 戻るリンクをピル型に（一覧へ／トップへ戻る） ===== */
+.back-link {
+  color: var(--ink); font-size: 13px; font-weight: 700;
+  padding: 8px 14px; border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 999px; background: rgba(255, 255, 255, .06);
+}
+.back-to-top {
+  display: inline-flex; align-items: center; gap: 6px; width: auto;
+  margin: 28px 0 0 max(20px, calc((100% - 880px) / 2));
+  padding: 8px 14px; color: var(--ink); font-size: 13px; font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, .16); border-radius: 999px;
+  background: rgba(255, 255, 255, .06);
+}

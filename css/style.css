@@ -1834,3 +1834,18 @@ a.music-card:hover {
 .qa .a .who img { width: 30px; height: 30px; border-radius: 50%; background: #e8f0ff; padding: 2px; }
 .qa .a p { margin: 0; }
 .interview .back { display: inline-block; margin-top: 6px; color: var(--accent); font-weight: 700; font-size: 13.5px; }
+
+/* ===== SP：ヘッダー1行化とインタビューバナーのコンパクト化 ===== */
+@media (max-width: 780px) {
+  .site-header { align-items: center; padding-left: 16px; padding-right: 16px; }
+  .brand { flex: none; }
+  .brand span { white-space: nowrap; }
+  .site-nav { flex-wrap: nowrap; flex: none; gap: 8px; }
+  .site-nav a { padding: 7px 10px; white-space: nowrap; }
+  .interview-banner { gap: 10px; padding: 10px 12px; }
+  .interview-banner .ib-faces span { width: 30px; height: 30px; margin-left: -10px; }
+  .interview-banner .ib-faces img { width: 22px; height: 22px; }
+  .interview-banner .ib-text { min-width: 0; }
+  .interview-banner .ib-text strong { font-size: 13px; line-height: 1.55; }
+  .interview-banner .ib-text small { display: none; }
+}

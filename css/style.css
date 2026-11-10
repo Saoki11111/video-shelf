@@ -1852,3 +1852,14 @@ a.music-card:hover {
 
 /* 詳細ページ：感想の下のトップへ戻るリンク */
 .back-to-top { display: block; width: min(880px, calc(100% - 40px)); margin: 28px auto 0; color: var(--accent); font-weight: 700; font-size: 13.5px; }
+
+/* 動物アイコンの背景色（CSP対応でクラス化） */
+.bg-rabbit { background: #ffe9f0; }
+.bg-tiger { background: #fff3d9; }
+.bg-penguin { background: #e3f2fd; }
+.bg-owl { background: #efe9fb; }
+.bg-cat { background: #e9fbe9; }
+
+/* 地図ヘッド：ボタンは見出しの横、サブとヒントは全幅 */
+.map-head { display: block; }
+.map-head-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 6px; }

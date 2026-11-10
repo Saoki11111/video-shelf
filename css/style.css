@@ -372,9 +372,15 @@ select {
 }
 
 .library,
-.top-sections,
 .detail-page {
   width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 72px 0 100px;
+}
+
+/* トップのブロック幅は全てこの指定に統一（880px／画面幅-40px） */
+.top-sections {
+  width: min(880px, calc(100% - 40px));
   margin: 0 auto;
   padding: 72px 0 100px;
 }
@@ -956,7 +962,6 @@ a.music-card:hover {
 }
 
 .pick-stage {
-  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -1462,7 +1467,7 @@ a.music-card:hover {
 
 /* ===== 旅の地図（トップ） ===== */
 .travel-map {
-  width: min(1120px, calc(100% - 48px));
+  width: min(880px, calc(100% - 40px));
   margin: 28px auto 0;
 }
 .map-panel {
@@ -1681,7 +1686,6 @@ a.music-card:hover {
 
 /* ===== PC向けレイアウト調整（スマホは現状維持） ===== */
 @media (min-width: 781px) {
-  .travel-map { width: min(880px, calc(100% - 48px)); }
   #travel-map-canvas { height: 480px; }
   .hero {
     max-width: 1120px;
@@ -1736,7 +1740,6 @@ a.music-card:hover {
 
 /* ===== Sound & Movie の端揃え／使用曲ページの2列化（PC） ===== */
 @media (min-width: 781px) {
-  .top-sections .shelf { width: min(720px, 100%); margin-inline: auto; }
   .music-tracks { grid-template-columns: 1fr 1fr; gap: 12px; }
 }
 
@@ -1889,13 +1892,4 @@ a.music-card:hover {
   .map-card-link { margin-left: 0; align-self: flex-end; }
 }
 
-/* PC：Sound & Movie の横幅を他のセクション（880px）に合わせる */
-@media (min-width: 781px) {
-  .shelf[aria-label="Sound & Movie"] { max-width: 880px; margin-left: auto; margin-right: auto; }
-}
 
-/* PC：Sound & Movie を上のセクションと同じ880px幅に（720px指定を上書き） */
-@media (min-width: 781px) {
-  .top-sections .shelf[aria-label="Sound & Movie"] { width: min(880px, 100%); }
-  .pick-stage { max-width: 880px; }
-}

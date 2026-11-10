@@ -1821,7 +1821,7 @@ a.music-card:hover {
 
 /* インタビューページ（interview.html） */
 .interview { width: min(760px, calc(100% - 40px)); margin: 0 auto; padding: 6px 0 10px; }
-.interview h1 { font-size: 27px; line-height: 1.45; margin: 0 0 12px; }
+.interview h1 { font-size: 24px; line-height: 1.45; margin: 0 0 12px; }
 .interview .lead { color: var(--muted); font-size: 14px; line-height: 1.9; margin: 0 0 26px; }
 .qa { margin-bottom: 26px; }
 .qa .q { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
@@ -1849,3 +1849,6 @@ a.music-card:hover {
   .interview-banner .ib-text strong { font-size: 13px; line-height: 1.55; }
   .interview-banner .ib-text small { display: none; }
 }
+
+/* 詳細ページ：感想の下のトップへ戻るリンク */
+.back-to-top { display: inline-block; margin-top: 28px; color: var(--accent); font-weight: 700; font-size: 13.5px; }

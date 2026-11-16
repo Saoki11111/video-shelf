@@ -210,6 +210,10 @@ select {
   display: block;
 }
 
+#hero-description span:nth-child(n + 4) {
+  display: none;
+}
+
 .carousel-arrow {
   position: absolute;
   z-index: 5;
@@ -1166,9 +1170,6 @@ a.music-card:hover {
     padding-bottom: 40px;
   }
 
-  #hero-description span:nth-child(n + 4) {
-    display: none;
-  }
 
   .video-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
